@@ -2,7 +2,7 @@
 
   <div style="margin-top: 80px; text-align: center;">
     <h1>Daikoku</h1>
-    <p style="color: var(--ion-color-medium)">Inicia sesión para continuar</p>
+    <p style="color: var(--ion-color-medium)">Iniciá sesión para continuar</p>
   </div>
 
   <ion-item>
@@ -23,17 +23,29 @@
     </ion-input>
   </ion-item>
 
-  <ion-text color="danger" *ngIf="error">
-    <p style="padding: 8px 16px;">{{ error }}</p>
-  </ion-text>
+  @if(error) {
+    <ion-text color="danger">
+      <p style="padding: 8px 16px;">{{ error }}</p>
+    </ion-text>
+  }
 
   <ion-button
     expand="block"
     style="margin-top: 24px;"
     [disabled]="loading"
     (click)="login()">
-    <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
-    <span *ngIf="!loading">Ingresar</span>
+    @if(loading) {
+      <ion-spinner name="crescent"></ion-spinner>
+    } @else {
+      <span>Ingresar</span>
+    }
   </ion-button>
+
+  <div style="text-align: center; margin-top: 16px;">
+    <ion-text color="medium">
+      ¿No tenés cuenta?
+      <a routerLink="/register" style="color: var(--ion-color-primary);">Registrate</a>
+    </ion-text>
+  </div>
 
 </ion-content>

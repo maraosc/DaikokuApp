@@ -36,4 +36,11 @@ export class AuthService {
   isLoggedIn(): boolean {
     return !!this.getToken();
   }
-}
+
+  register(username: string, email: string, password: string, password2: string) {
+      return this.http.post(
+        `${this.apiUrl}/auth/register/`,
+        { username, email, password, password2 }
+      );
+    }
+  }

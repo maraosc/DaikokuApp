@@ -151,3 +151,6 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8100",
     "capacitor://localhost",
 ]
+
+LANGUAGE_CODE = 'es'
+USE_I18N = True

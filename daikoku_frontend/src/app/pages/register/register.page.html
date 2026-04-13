@@ -1,0 +1,72 @@
+<ion-content class="ion-padding">
+
+  <div style="margin-top: 60px; text-align: center;">
+    <h1>Crear cuenta</h1>
+    <p style="color: var(--ion-color-medium)">Completá tus datos para registrarte</p>
+  </div>
+
+  <ion-item style="margin-top: 16px;">
+    <ion-label position="floating">Username</ion-label>
+    <ion-input
+      type="text"
+      [(ngModel)]="username"
+      (ionInput)="error = ''"
+      placeholder="tu_usuario">
+    </ion-input>
+  </ion-item>
+
+  <ion-item style="margin-top: 12px;">
+    <ion-label position="floating">Email</ion-label>
+    <ion-input
+      type="email"
+      [(ngModel)]="email"
+      (ionInput)="error = ''"
+      placeholder="tu@email.com">
+    </ion-input>
+  </ion-item>
+
+  <ion-item style="margin-top: 12px;">
+    <ion-label position="floating">Contraseña</ion-label>
+    <ion-input
+      type="password"
+      (ionInput)="error = ''"
+      [(ngModel)]="password">
+    </ion-input>
+  </ion-item>
+
+  <ion-item style="margin-top: 12px;">
+    <ion-label position="floating">Confirmar contraseña</ion-label>
+    <ion-input
+      type="password"
+      [(ngModel)]="password2"
+      (ionInput)="error = ''"
+      (keyup.enter)="register()">
+    </ion-input>
+  </ion-item>
+
+  @if(error) {
+    <ion-text color="danger">
+      <p style="padding: 8px 16px;">{{ error }}</p>
+    </ion-text>
+  }
+
+  <ion-button
+    expand="block"
+    style="margin-top: 24px;"
+    [disabled]="loading"
+    (click)="register()">
+    @if(loading) {
+      <ion-spinner name="crescent"></ion-spinner>
+    } @else {
+      <span>Crear cuenta</span>
+    }
+  </ion-button>
+
+  <div style="text-align: center; margin-top: 16px;">
+    <ion-text color="medium">
+      ¿Ya tienes cuenta?
+      <a routerLink="/login" style="color: var(--ion-color-primary);">Inicia sesión</a>
+    </ion-text>
+  </div>
+
+</ion-content>

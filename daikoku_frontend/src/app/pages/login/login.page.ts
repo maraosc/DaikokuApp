@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import {
   IonContent, IonInput, IonButton, IonItem,
@@ -13,7 +13,7 @@ import { AuthService } from '../../services/auth';
   imports: [
     FormsModule,
     IonContent, IonInput, IonButton, IonItem,
-    IonLabel, IonText, IonSpinner
+    IonLabel, IonText, IonSpinner, RouterLink
   ],
 })
 export class LoginPage {
