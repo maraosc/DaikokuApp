@@ -35,7 +35,11 @@ export class LoginPage {
     this.authService.login(this.email, this.password).subscribe({
       next: () => {
         this.loading = false;
-        this.router.navigate(['/home']);
+        if (this.authService.isFullyRegistered()) {
+          this.router.navigate(['/home']);
+        } else {
+          this.router.navigate(['/onboarding']);
+        }
       },
       error: () => {
         this.loading = false;

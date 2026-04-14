@@ -24,10 +24,11 @@ export class AuthService {
     );
   }
 
-  logout() {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-  }
+logout() {
+  localStorage.removeItem('access_token');
+  localStorage.removeItem('refresh_token');
+  localStorage.removeItem('user');
+}
 
   getToken(): string | null {
     return localStorage.getItem('access_token');
@@ -43,4 +44,34 @@ export class AuthService {
         { username, email, password, password2 }
       );
     }
+
+          getUser(): any {
+      const user = localStorage.getItem('user');
+      return user ? JSON.parse(user) : null;
+    }
+
+    isFullyRegistered(): boolean {
+      const user = this.getUser();
+      return user?.full_register === true;
+    }
+
+    createGoal(name: string, targetAmount: number, deadline?: string) {
+  return this.http.post(
+    `${this.apiUrl}/goals/`,
+    { name, target_amount: targetAmount, deadline }
+  );
+}
+
+    completeOnboarding(monthlyBudget: number) {
+    return this.http.patch(
+      `${this.apiUrl}/auth/onboarding/`,
+      { monthly_budget: monthlyBudget }
+    ).pipe(
+      tap((user: any) => {
+        localStorage.setItem('user', JSON.stringify(user));
+      })
+    );
+}
   }
+
+

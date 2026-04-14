@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
 from django.db import transaction as db_transaction
 from .models import User, Category, Transaction, Goal
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -207,3 +208,17 @@ class GoalContributionSerializer(serializers.Serializer):
     def save(self, goal: Goal):
         goal.add_contribution(self.validated_data["amount"])
         return goal
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+
+        data['user'] = {
+            'id':             self.user.id,
+            'username':       self.user.username,
+            'email':          self.user.email,
+            'full_register':  self.user.full_register,
+            'monthly_budget': str(self.user.monthly_budget) if self.user.monthly_budget else None,
+        }
+
+        return data

@@ -40,35 +40,43 @@ export class RegisterPage implements OnInit {
     private router: Router
   ) {}
 
-  register() {
-    this.error = '';
+register() {
+  this.error = '';
 
-    if (this.password !== this.password2) {
-      this.error = 'Las contraseñas no coinciden.';
-      return;
-    }
-
-    this.loading = true;
-
-    this.authService.register(this.username, this.email, this.password, this.password2).subscribe({
-      next: () => {
-        this.loading = false;
-        this.router.navigate(['/login']);
-      },
-      error: (err) => {
-        this.loading = false;
-        const e = err.error;
-        const raw =
-          e?.email?.[0] ||
-          e?.username?.[0] ||
-          e?.password?.[0] ||
-          e?.non_field_errors?.[0] ||
-          'Error al registrarse.';
-
-        this.error = this.traducirError(raw);
-      }
-    });
+  if (this.password !== this.password2) {
+    this.error = 'Las contraseñas no coinciden.';
+    return;
   }
+
+  this.loading = true;
+
+  this.authService.register(this.username, this.email, this.password, this.password2).subscribe({
+    next: () => {
+      // Login automático después del registro
+      this.authService.login(this.email, this.password).subscribe({
+        next: () => {
+          this.loading = false;
+          this.router.navigate(['/onboarding']);
+        },
+        error: () => {
+          this.loading = false;
+          this.router.navigate(['/login']);
+        }
+      });
+    },
+    error: (err) => {
+      this.loading = false;
+      const e = err.error;
+      const raw =
+        e?.email?.[0] ||
+        e?.username?.[0] ||
+        e?.password?.[0] ||
+        e?.non_field_errors?.[0] ||
+        'Error al registrarse.';
+      this.error = this.traducirError(raw);
+    }
+  });
+}
 
   traducirError(msg: string): string {
   const traducciones: { [key: string]: string } = {

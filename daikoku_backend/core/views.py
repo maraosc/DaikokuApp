@@ -7,6 +7,8 @@ from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework_simplejwt.views import TokenObtainPairView
+from .serializers import CustomTokenObtainPairSerializer
 
 from .models import Category, Goal, Transaction, User
 from .serializers import (
@@ -202,3 +204,27 @@ class GoalViewSet(viewsets.ModelViewSet):
             GoalSerializer(goal, context={"request": request}).data,
             status=status.HTTP_200_OK,
         )
+    
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
+
+class CompleteOnboardingView(generics.UpdateAPIView):
+    """PATCH /api/auth/onboarding/ — guarda presupuesto y marca full_register = True"""
+
+    serializer_class   = UserProfileSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
+    def update(self, request, *args, **kwargs):
+        serializer = self.get_serializer(
+            self.request.user,
+            data=request.data,
+            partial=True
+        )
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        user.full_register = True
+        user.save(update_fields=['full_register'])
+        return Response(serializer.data)

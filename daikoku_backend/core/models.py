@@ -149,7 +149,7 @@ class Goal(models.Model):
     name           = models.CharField(max_length=200)
     target_amount  = models.DecimalField(max_digits=12, decimal_places=2)
     current_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0)
-    creation_date  = models.DateField(default=timezone.now)
+    creation_date = models.DateField(default=timezone.localdate)
     deadline       = models.DateField(
         null=True, blank=True,
         help_text="Fecha límite opcional para la meta"
