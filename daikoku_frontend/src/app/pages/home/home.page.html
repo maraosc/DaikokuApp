@@ -1,20 +1,56 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+    <ion-title>Mis finanzas</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+  <!-- Balance -->
+  <div style="text-align: center; padding: 32px 16px 16px;">
+    <p style="margin: 0; color: var(--ion-color-medium); font-size: 0.9rem;">BALANCE</p>
+    <h1 style="margin: 4px 0; font-size: 2.5rem; font-weight: 700;">$ {{ balance | number }}</h1>
   </div>
+
+  <!-- Selector Gastos / Ingresos -->
+  <ion-segment [(ngModel)]="vistaActual" style="margin: 0 16px 16px;">
+    <ion-segment-button value="gastos">
+      <ion-label>Gastos</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="ingresos">
+      <ion-label>Ingresos</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <!-- Lista de transacciones -->
+  <ion-list>
+    @for(tx of transactionsFiltradas; track tx.id) {
+      <ion-item>
+        <ion-label>
+          <h3>{{ tx.category_name ?? 'Sin categoría' }}</h3>
+          <p>{{ tx.description }}</p>
+          <p>{{ tx.date }}</p>
+        </ion-label>
+        <ion-note slot="end" [style.color]="tx.type === 'income' ? 'var(--ion-color-success)' : 'var(--ion-color-danger)'">
+          {{ tx.type === 'income' ? '+' : '-' }}$ {{ tx.amount | number }}
+        </ion-note>
+      </ion-item>
+    }
+
+    @if(transactionsFiltradas.length === 0) {
+      <ion-item>
+        <ion-label style="text-align: center; color: var(--ion-color-medium);">
+          No hay transacciones este mes
+        </ion-label>
+      </ion-item>
+    }
+  </ion-list>
+
+  <!-- Botón flotante + -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="abrirModal()">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
 </ion-content>

@@ -2,6 +2,7 @@ import { HttpInterceptorFn } from '@angular/common/http';
 
 const PUBLIC_URLS = ['/auth/login/', '/auth/register/'];
 
+
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const isPublic = PUBLIC_URLS.some(url => req.url.includes(url));
 
@@ -10,6 +11,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   }
 
   const token = localStorage.getItem('access_token');
+  console.log('Interceptor - URL:', req.url, '| Token:', token ? 'existe' : 'NO HAY TOKEN');
 
   if (token) {
     const cloned = req.clone({

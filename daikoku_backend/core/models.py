@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.utils import timezone
+from django.utils.timezone import localdate
+
 
 
 class UserManager(BaseUserManager):
@@ -116,7 +118,7 @@ class Transaction(models.Model):
     )
     amount      = models.DecimalField(max_digits=12, decimal_places=2)
     description = models.CharField(max_length=255, blank=True)
-    date        = models.DateField(default=timezone.now)
+    date = models.DateField(default=localdate)
 
     goal        = models.ForeignKey(
         "Goal",

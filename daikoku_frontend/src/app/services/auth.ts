@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+import { Observable, forkJoin, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -72,6 +73,22 @@ logout() {
       })
     );
 }
+
+saveIngresos(ingresos: { nombre: string; monto: number }[]): Observable<any> {
+  if (ingresos.length === 0) return of(null);
+
+  const requests = ingresos.map(ingreso =>
+    this.http.post(`${this.apiUrl}/transactions/`, {
+      type: 'income',
+      amount: ingreso.monto,
+      description: ingreso.nombre,
+    })
+  );
+
+  return forkJoin(requests);
+}
+
   }
+
 
 
