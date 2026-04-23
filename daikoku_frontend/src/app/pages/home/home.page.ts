@@ -5,12 +5,14 @@ import {
   IonHeader, IonToolbar, IonTitle, IonContent,
   IonFab, IonFabButton, IonIcon,
   IonSegment, IonSegmentButton, IonLabel,
-  IonList, IonItem, IonNote,
-  ModalController, ActionSheetController, AlertController
+  IonList, IonItem, IonNote, IonButtons,
+  IonMenu, IonMenuButton,
+  ModalController, ActionSheetController, AlertController, MenuController
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { addOutline, pencilOutline, trashOutline } from 'ionicons/icons';
+import { addOutline, pencilOutline, trashOutline, homeOutline, trendingUpOutline, personOutline } from 'ionicons/icons';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { TransactionModalComponent } from '../../components/transaction-modal/transaction-modal.component';
 
@@ -33,14 +35,17 @@ interface Transaction {
     IonHeader, IonToolbar, IonTitle, IonContent,
     IonFab, IonFabButton, IonIcon,
     IonSegment, IonSegmentButton, IonLabel,
-    IonList, IonItem, IonNote,
+    IonList, IonItem, IonNote, IonButtons,
+    IonMenu, IonMenuButton,
   ],
 })
 export class HomePage implements OnInit {
 
-  balance      = 0;
-  vistaActual  = 'gastos';
+  balance     = 0;
+  vistaActual = 'gastos';
   transactions: Transaction[] = [];
+  dolar = 0;
+  uf    = 0;
 
   private apiUrl = environment.apiUrl;
 
@@ -48,13 +53,16 @@ export class HomePage implements OnInit {
     private modalCtrl: ModalController,
     private actionSheetCtrl: ActionSheetController,
     private alertCtrl: AlertController,
+    private menuCtrl: MenuController,
+    private router: Router,
     private http: HttpClient
   ) {
-    addIcons({ addOutline, pencilOutline, trashOutline });
+    addIcons({ addOutline, pencilOutline, trashOutline, homeOutline, trendingUpOutline, personOutline });
   }
 
   ngOnInit() {
     this.cargarDatos();
+    this.cargarIndicadores();
   }
 
   get transactionsFiltradas(): Transaction[] {
@@ -77,6 +85,23 @@ export class HomePage implements OnInit {
         this.transactions = data;
       }
     });
+  }
+
+  cargarIndicadores() {
+    this.http.get<any>('/mindicador/api/dolar').subscribe({
+      next: data => this.dolar = data.serie[0].valor,
+      error: () => {}
+    });
+
+    this.http.get<any>('/mindicador/api/uf').subscribe({
+      next: data => this.uf = data.serie[0].valor,
+      error: () => {}
+    });
+  }
+
+  async navegarA(ruta: string) {
+    await this.menuCtrl.close();
+    this.router.navigate([ruta]);
   }
 
   async abrirModal() {

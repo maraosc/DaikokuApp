@@ -1,0 +1,10 @@
+{
+  "/mindicador": {
+    "target": "https://mindicador.cl",
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/mindicador": ""
+    },
+    "secure": false
+  }
+}

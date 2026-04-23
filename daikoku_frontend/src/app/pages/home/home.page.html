@@ -1,56 +1,109 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>Mis finanzas</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-
-  <!-- Balance -->
-  <div style="text-align: center; padding: 32px 16px 16px;">
-    <p style="margin: 0; color: var(--ion-color-medium); font-size: 0.9rem;">BALANCE</p>
-    <h1 style="margin: 4px 0; font-size: 2.5rem; font-weight: 700;">$ {{ balance | number }}</h1>
-  </div>
-
-  <!-- Selector Gastos / Ingresos -->
-  <ion-segment [(ngModel)]="vistaActual" style="margin: 0 16px 16px;">
-    <ion-segment-button value="gastos">
-      <ion-label>Gastos</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="ingresos">
-      <ion-label>Ingresos</ion-label>
-    </ion-segment-button>
-  </ion-segment>
-
-  <!-- Lista de transacciones -->
-  <ion-list>
-    @for(tx of transactionsFiltradas; track tx.id) {
-      <ion-item button detail="false" (click)="abrirDetalle(tx)">
-        <ion-label>
-          <h3>{{ tx.category_name ?? 'Sin categoría' }}</h3>
-          <p>{{ tx.description }}</p>
-          <p>{{ tx.date }}</p>
-        </ion-label>
-        <ion-note slot="end" [style.color]="tx.type === 'income' ? 'var(--ion-color-success)' : 'var(--ion-color-danger)'">
-          {{ tx.type === 'income' ? '+' : '-' }}$ {{ tx.amount | number }}
-        </ion-note>
+<ion-menu contentId="main-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Menú</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <ion-item button (click)="navegarA('/home')" lines="none">
+        <ion-icon name="home-outline" slot="start"></ion-icon>
+        <ion-label>Inicio</ion-label>
       </ion-item>
-    }
-
-    @if(transactionsFiltradas.length === 0) {
-      <ion-item>
-        <ion-label style="text-align: center; color: var(--ion-color-medium);">
-          No hay transacciones este mes
-        </ion-label>
+      <ion-item button (click)="navegarA('/inversiones')" lines="none">
+        <ion-icon name="trending-up-outline" slot="start"></ion-icon>
+        <ion-label>Inversiones</ion-label>
       </ion-item>
-    }
-  </ion-list>
+      <ion-item button (click)="navegarA('/perfil')" lines="none">
+        <ion-icon name="person-outline" slot="start"></ion-icon>
+        <ion-label>Perfil</ion-label>
+      </ion-item>
+    </ion-list>
 
-  <!-- Botón flotante + -->
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="abrirModal()">
-      <ion-icon name="add-outline"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
+    <!-- Indicadores económicos -->
+    <div style="padding: 16px;">
+      <p style="font-weight: 600; color: var(--ion-color-medium); font-size: 0.8rem; margin: 0 0 12px; text-transform: uppercase; letter-spacing: 1px;">
+        Indicadores
+      </p>
 
-</ion-content>
+      <div style="background: var(--ion-color-light); border-radius: 12px; padding: 12px 16px; margin-bottom: 10px;">
+        <p style="margin: 0; font-size: 0.8rem; color: var(--ion-color-medium);">Dólar</p>
+        <p style="margin: 4px 0 0; font-size: 1.2rem; font-weight: 700;">
+          $ {{ dolar | number:'1.0-0' }}
+        </p>
+      </div>
+
+      <div style="background: var(--ion-color-light); border-radius: 12px; padding: 12px 16px;">
+        <p style="margin: 0; font-size: 0.8rem; color: var(--ion-color-medium);">UF</p>
+        <p style="margin: 4px 0 0; font-size: 1.2rem; font-weight: 700;">
+          $ {{ uf | number:'1.0-0' }}
+        </p>
+      </div>
+    </div>
+
+  </ion-content>
+</ion-menu>
+
+<div class="ion-page" id="main-content">
+
+  <ion-header [translucent]="true">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-menu-button></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Mis finanzas</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content [fullscreen]="true">
+
+    <!-- Balance -->
+    <div style="text-align: center; padding: 32px 16px 16px;">
+      <p style="margin: 0; color: var(--ion-color-medium); font-size: 0.9rem;">BALANCE</p>
+      <h1 style="margin: 4px 0; font-size: 2.5rem; font-weight: 700;">$ {{ balance | number }}</h1>
+    </div>
+
+    <!-- Selector Gastos / Ingresos -->
+    <ion-segment [(ngModel)]="vistaActual" style="margin: 0 16px 16px;">
+      <ion-segment-button value="gastos">
+        <ion-label>Gastos</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="ingresos">
+        <ion-label>Ingresos</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+    <!-- Lista de transacciones -->
+    <ion-list>
+      @for(tx of transactionsFiltradas; track tx.id) {
+        <ion-item button detail="false" (click)="abrirDetalle(tx)">
+          <ion-label>
+            <h3>{{ tx.category_name ?? 'Sin categoría' }}</h3>
+            <p>{{ tx.description }}</p>
+            <p>{{ tx.date }}</p>
+          </ion-label>
+          <ion-note slot="end" [style.color]="tx.type === 'income' ? 'var(--ion-color-success)' : 'var(--ion-color-danger)'">
+            {{ tx.type === 'income' ? '+' : '-' }}$ {{ tx.amount | number }}
+          </ion-note>
+        </ion-item>
+      }
+
+      @if(transactionsFiltradas.length === 0) {
+        <ion-item>
+          <ion-label style="text-align: center; color: var(--ion-color-medium);">
+            No hay transacciones este mes
+          </ion-label>
+        </ion-item>
+      }
+    </ion-list>
+
+    <!-- Botón flotante + -->
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+      <ion-fab-button (click)="abrirModal()">
+        <ion-icon name="add-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+
+  </ion-content>
+
+</div>
