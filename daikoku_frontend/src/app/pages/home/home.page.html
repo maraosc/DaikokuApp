@@ -15,6 +15,11 @@
         <ion-label>Inicio</ion-label>
       </ion-item>
 
+      <ion-item button (click)="navegarA('/budgets')" lines="none">
+        <ion-icon name="wallet-outline" slot="start"></ion-icon>
+        <ion-label>Presupuestos</ion-label>
+      </ion-item>
+
       <ion-item button (click)="navegarA('/inversiones')" lines="none">
         <ion-icon name="trending-up-outline" slot="start"></ion-icon>
         <ion-label>Inversiones</ion-label>
@@ -24,14 +29,7 @@
         <ion-icon name="person-outline" slot="start"></ion-icon>
         <ion-label>Perfil</ion-label>
       </ion-item>
-<<<<<<< HEAD
 
-=======
-      <ion-item button (click)="navegarA('/budgets')" lines="none">
-  <ion-icon name="wallet-outline" slot="start"></ion-icon>
-  <ion-label>Presupuestos</ion-label>
-</ion-item>
->>>>>>> 8fcdccdc72108e76b9ba7c70b8848ddc682b94ae
     </ion-list>
 
     <div class="menu-indicators">
@@ -78,103 +76,69 @@
 
   <ion-content fullscreen="true" class="home-content">
 
-    <div class="home-wrapper"> 
-    <!-- Balance -->
+    <div class="home-wrapper">
 
-    <section class="balance-card">
+      <!-- Balance -->
+      <section class="balance-card">
+        <p class="balance-label">BALANCE</p>
+        <h1 class="balance-amount">
+          $ {{ balance | number:'1.0-0':'es-CL' }}
+        </h1>
+      </section>
 
-      <p class="balance-label">BALANCE</p>
+      <!-- Selector -->
+      <ion-segment [(ngModel)]="vistaActual" class="transactions-segment">
+        <ion-segment-button value="gastos">
+          <ion-label>Gastos</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="ingresos">
+          <ion-label>Ingresos</ion-label>
+        </ion-segment-button>
+      </ion-segment>
 
-      <h1 class="balance-amount">
-        $ {{ balance | number:'1.0-0':'es-CL' }}
-      </h1>
+      <!-- Transacciones -->
+      <ion-list class="transactions-list">
 
-    </section>
+        @for(tx of transactionsFiltradas; track tx.id) {
+          <ion-item
+            button
+            detail="false"
+            class="transaction-item"
+            (click)="abrirDetalle(tx)">
 
+            <ion-label>
+              <h3>{{ tx.category_name ?? 'Sin categoría' }}</h3>
+              <p class="transaction-description">{{ tx.description }}</p>
+              <p class="transaction-date">{{ tx.date }}</p>
+            </ion-label>
 
-    <!-- Selector -->
+            <ion-note
+              slot="end"
+              class="transaction-amount"
+              [class.income]="tx.type === 'income'"
+              [class.expense]="tx.type !== 'income'">
+              {{ tx.type === 'income' ? '+' : '-' }}$
+              {{ tx.amount | number:'1.0-0':'es-CL' }}
+            </ion-note>
 
-    <ion-segment
-      [(ngModel)]="vistaActual"
-      class="transactions-segment">
+          </ion-item>
+        }
 
-      <ion-segment-button value="gastos">
-        <ion-label>Gastos</ion-label>
-      </ion-segment-button>
+        @if(transactionsFiltradas.length === 0) {
+          <ion-item class="empty-state">
+            <ion-label>No hay transacciones este mes</ion-label>
+          </ion-item>
+        }
 
-      <ion-segment-button value="ingresos">
-        <ion-label>Ingresos</ion-label>
-      </ion-segment-button>
-
-    </ion-segment>
-
-
-    <!-- Transacciones -->
-
-    <ion-list class="transactions-list">
-
-      @for(tx of transactionsFiltradas; track tx.id) {
-
-        <ion-item
-          button
-          detail="false"
-          class="transaction-item"
-          (click)="abrirDetalle(tx)">
-
-          <ion-label>
-
-            <h3>{{ tx.category_name ?? 'Sin categoría' }}</h3>
-
-            <p class="transaction-description">
-              {{ tx.description }}
-            </p>
-
-            <p class="transaction-date">
-              {{ tx.date }}
-            </p>
-
-          </ion-label>
-
-          <ion-note
-            slot="end"
-            class="transaction-amount"
-            [class.income]="tx.type === 'income'"
-            [class.expense]="tx.type !== 'income'">
-
-            {{ tx.type === 'income' ? '+' : '-' }}$
-            {{ tx.amount | number:'1.0-0':'es-CL' }}
-
-          </ion-note>
-
-        </ion-item>
-
-      }
-
-      @if(transactionsFiltradas.length === 0) {
-
-        <ion-item class="empty-state">
-          <ion-label>
-            No hay transacciones este mes
-          </ion-label>
-        </ion-item>
-
-      }
-
-    </ion-list>
+      </ion-list>
 
     </div>
+
     <!-- FAB -->
-
     <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-
-      <ion-fab-button
-        class="add-transaction-button"
-        (click)="abrirModal()">
-
+      <ion-fab-button class="add-transaction-button" (click)="abrirModal()">
         <ion-icon name="add-outline"></ion-icon>
-
       </ion-fab-button>
-
     </ion-fab>
 
   </ion-content>

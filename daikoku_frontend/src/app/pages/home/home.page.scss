@@ -137,3 +137,108 @@ ion-toolbar {
 ion-menu-button {
   --color: white;
 }
+
+// ── Menú lateral ─────────────────────────────────────────────────────
+
+ion-menu {
+  --background: #3F4531;
+  --width: 280px;
+}
+
+ion-menu ion-toolbar {
+  --background: #3F4531;
+  --color: #91F9E5;
+  --border-color: rgba(255,255,255,0.08);
+  padding-top: 40px;
+  padding-bottom: 8px;
+}
+
+ion-menu ion-title {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #91F9E5;
+}
+
+ion-menu ion-content {
+  --background: #3F4531;
+}
+
+.menu-list {
+  background: transparent;
+  padding: 16px 12px;
+}
+
+.menu-list ion-item {
+  --background: transparent;
+  --color: #e8f5e9;
+  --border-color: transparent;
+  --padding-start: 12px;
+  --inner-padding-end: 12px;
+  border-radius: 14px;
+  margin-bottom: 6px;
+  font-weight: 600;
+  font-size: 16px;
+  transition: background 0.2s;
+}
+
+.menu-list ion-item:hover {
+  --background: rgba(95, 221, 157, 0.15);
+}
+
+.menu-list ion-item ion-icon {
+  color: #5FDD9D;
+  font-size: 22px;
+  margin-right: 4px;
+}
+
+.menu-list ion-item ion-label {
+  color: #e8f5e9;
+}
+
+// ── Indicadores ───────────────────────────────────────────────────────
+
+.menu-indicators {
+  margin: 8px 16px 24px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 20px;
+}
+
+.menu-indicators-title {
+  margin: 0 0 14px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(145, 249, 229, 0.7);
+}
+
+.indicator-card {
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.indicator-label {
+  margin: 0 0 4px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(145, 249, 229, 0.7);
+}
+
+.indicator-value {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  color: #76F7BF;
+}
+
+.home-wrapper {
+  position: relative;
+  min-height: 100%;
+  padding: 0 18px;
+}
