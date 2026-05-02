@@ -1,0 +1,39 @@
+<ion-content class="detail-content">
+
+  <div class="handle"></div>
+
+  <div class="detail-info">
+    <div class="detail-icon-wrapper"
+      [class.income]="transaction?.type === 'income'"
+      [class.expense]="transaction?.type === 'expense'">
+      <ion-icon
+        [name]="transaction?.category_icon || 'cash-outline'"
+        class="detail-icon">
+      </ion-icon>
+    </div>
+    <div class="detail-text">
+      <p class="detail-category">{{ transaction?.category_name ?? 'Sin categoría' }}</p>
+      <p class="detail-description">{{ transaction?.description }}</p>
+      <p class="detail-date">{{ transaction?.date }}</p>
+    </div>
+    <div class="detail-amount"
+      [class.income]="transaction?.type === 'income'"
+      [class.expense]="transaction?.type === 'expense'">
+      {{ transaction?.type === 'income' ? '+' : '-' }}${{ transaction?.amount | number:'1.0-0':'es-CL' }}
+    </div>
+  </div>
+
+  <div class="detail-actions">
+    <button class="action-btn edit-btn" (click)="editar()">
+      <ion-icon name="create-outline"></ion-icon>
+      <span>Editar</span>
+    </button>
+    <button class="action-btn delete-btn" (click)="eliminar()">
+      <ion-icon name="trash-outline"></ion-icon>
+      <span>Eliminar</span>
+    </button>
+  </div>
+
+  <button class="cancel-btn" (click)="cancelar()">Cancelar</button>
+
+</ion-content>

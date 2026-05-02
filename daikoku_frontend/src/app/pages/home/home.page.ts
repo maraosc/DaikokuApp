@@ -7,7 +7,7 @@ import {
   IonSegment, IonSegmentButton, IonLabel,
   IonList, IonItem, IonNote, IonButtons,
   IonMenu, IonMenuButton,
-  ModalController, ActionSheetController, AlertController, MenuController
+  ModalController, AlertController, MenuController
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { addOutline, pencilOutline, trashOutline, homeOutline, trendingUpOutline, personOutline, walletOutline } from 'ionicons/icons';
@@ -15,7 +15,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { TransactionModalComponent } from '../../components/transaction-modal/transaction-modal.component';
-
+import { TransactionDetailComponent } from '../../components/transaction-detail/transaction-detail.component';
 
 interface Transaction {
   id: number;
@@ -52,13 +52,12 @@ export class HomePage implements OnInit {
 
   constructor(
     private modalCtrl: ModalController,
-    private actionSheetCtrl: ActionSheetController,
     private alertCtrl: AlertController,
     private menuCtrl: MenuController,
     private router: Router,
     private http: HttpClient
   ) {
-    addIcons({ addOutline, pencilOutline, trashOutline, homeOutline, trendingUpOutline, personOutline, walletOutline});
+    addIcons({ addOutline, pencilOutline, trashOutline, homeOutline, trendingUpOutline, personOutline, walletOutline });
   }
 
   ngOnInit() {
@@ -122,28 +121,21 @@ export class HomePage implements OnInit {
   }
 
   async abrirDetalle(tx: Transaction) {
-    const actionSheet = await this.actionSheetCtrl.create({
-      header: `${tx.category_name ?? 'Sin categoría'} — $${tx.amount}`,
-      subHeader: tx.description || tx.date,
-      buttons: [
-        {
-          text: 'Editar',
-          icon: 'pencil-outline',
-          handler: () => this.abrirEdicion(tx)
-        },
-        {
-          text: 'Eliminar',
-          icon: 'trash-outline',
-          role: 'destructive',
-          handler: () => this.eliminarTransaccion(tx)
-        },
-        {
-          text: 'Cancelar',
-          role: 'cancel'
-        }
-      ]
+    const modal = await this.modalCtrl.create({
+      component: TransactionDetailComponent,
+      componentProps: { transaction: tx },
+      breakpoints: [0, 0.35],
+      initialBreakpoint: 0.35,
     });
-    await actionSheet.present();
+
+    await modal.present();
+
+    const { data, role } = await modal.onWillDismiss();
+    if (role === 'edit') {
+      this.abrirEdicion(data.transaction);
+    } else if (role === 'delete') {
+      this.eliminarTransaccion(data.transaction);
+    }
   }
 
   async abrirEdicion(tx: Transaction) {
