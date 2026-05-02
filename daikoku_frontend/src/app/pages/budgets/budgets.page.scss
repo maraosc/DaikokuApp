@@ -1,0 +1,245 @@
+// ── Content ───────────────────────────────────────────────────────────
+
+.budget-content {
+  --background: linear-gradient(
+    180deg,
+    #5FDD9D 0%,
+    #84EEA3 45%,
+    #AAFFA9 100%
+  );
+}
+
+// ── Wrapper ───────────────────────────────────────────────────────────
+
+.budget-wrapper {
+  position: relative;
+  min-height: 100%;
+  padding: 0 18px 100px;
+}
+
+.budget-wrapper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("/assets/img/fujimi.png");
+  background-size: 800px;
+  background-repeat: repeat;
+  background-position: center;
+  opacity: 0.06;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.summary-card,
+.budget-list,
+.budget-item {
+  position: relative;
+  z-index: 1;
+}
+
+// ── Toolbar ───────────────────────────────────────────────────────────
+
+ion-toolbar {
+  --background: transparent;
+  --color: white;
+}
+
+ion-back-button {
+  --color: white;
+}
+
+// ── Resumen ───────────────────────────────────────────────────────────
+
+.summary-card {
+  margin: 28px 0 18px;
+  background: #3F4531;
+  border-radius: 22px;
+  padding: 24px 20px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+}
+
+.summary-label {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(145, 249, 229, 0.8);
+}
+
+.summary-amount {
+  margin: 6px 0 16px;
+  font-size: 34px;
+  font-weight: 900;
+  color: #91F9E5;
+}
+
+.summary-progress {
+  margin-bottom: 10px;
+  border-radius: 4px;
+  --background: rgba(255,255,255,0.15);
+  --progress-background: #76F7BF;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: rgba(255,255,255,0.75);
+  margin-bottom: 10px;
+}
+
+.summary-available {
+  color: #76F7BF;
+  font-weight: 700;
+}
+
+.summary-monthly {
+  margin: 0;
+  font-size: 12px;
+  color: rgba(145, 249, 229, 0.6);
+}
+
+// ── Lista ─────────────────────────────────────────────────────────────
+
+.budget-list {
+  background: transparent;
+  padding: 0;
+}
+
+.budget-item {
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 18px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+}
+
+.budget-item-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.budget-icon-wrapper {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #e8faf0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.budget-icon {
+  font-size: 22px;
+  color: #499167;
+}
+
+.budget-item-info {
+  flex: 1;
+}
+
+.budget-name {
+  margin: 0 0 2px;
+  font-weight: 800;
+  font-size: 15px;
+  color: #222;
+}
+
+.budget-amounts {
+  margin: 0;
+  font-size: 12px;
+  color: #777;
+}
+
+.budget-item-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.budget-pct {
+  font-weight: 900;
+  font-size: 15px;
+  color: #2bae66;
+}
+
+.budget-pct.warning {
+  color: #f0a500;
+}
+
+.budget-pct.danger {
+  color: #d9534f;
+}
+
+.budget-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.budget-action-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ion-icon {
+    font-size: 16px;
+  }
+}
+
+.budget-action-btn.edit {
+  background: #e8faf0;
+  color: #2bae66;
+}
+
+.budget-action-btn.delete {
+  background: #ffeaea;
+  color: #d9534f;
+}
+
+.budget-progress {
+  border-radius: 4px;
+  height: 6px;
+}
+
+// ── Empty state ───────────────────────────────────────────────────────
+
+.empty-state {
+  text-align: center;
+  padding: 40px 16px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  color: #777;
+}
+
+.empty-icon {
+  font-size: 48px;
+  color: #2bae66;
+  display: block;
+  margin: 0 auto 12px;
+}
+
+.empty-state p {
+  margin: 0 0 6px;
+}
+
+.empty-hint {
+  font-size: 13px;
+}
+
+// ── FAB ───────────────────────────────────────────────────────────────
+
+.budget-fab {
+  --background: #2bae66;
+  --color: white;
+  --box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+}

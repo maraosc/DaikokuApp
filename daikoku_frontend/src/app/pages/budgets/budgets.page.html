@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/home"></ion-back-button>
@@ -7,76 +7,84 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content [fullscreen]="true" class="budget-content">
 
-  <!-- Resumen total -->
-  <div style="background: var(--ion-color-primary); border-radius: 16px; padding: 20px; margin-bottom: 24px; color: white;">
-    <p style="margin: 0; font-size: 0.85rem; opacity: 0.8;">Total presupuestado</p>
-    <h1 style="margin: 4px 0; font-size: 2rem; font-weight: 700;">$ {{ totalPresupuestado | number:'1.0-0' }}</h1>
+  <div class="budget-wrapper">
 
-    <ion-progress-bar
-      [value]="presupuestoUsadoPct / 100"
-      style="margin: 12px 0 8px; border-radius: 4px; height: 8px;">
-    </ion-progress-bar>
+    <!-- Resumen total -->
+    <div class="summary-card">
+      <p class="summary-label">Total presupuestado</p>
+      <h1 class="summary-amount">$ {{ totalPresupuestado | number:'1.0-0':'es-CL' }}</h1>
 
-    <div style="display: flex; justify-content: space-between; font-size: 0.8rem; opacity: 0.9;">
-      <span>$ {{ totalGastado | number:'1.0-0' }} gastado</span>
-      <span style="color: #90EE90;">$ {{ disponible | number:'1.0-0' }} disponible</span>
+      <ion-progress-bar
+        [value]="presupuestoUsadoPct / 100"
+        class="summary-progress">
+      </ion-progress-bar>
+
+      <div class="summary-row">
+        <span>$ {{ totalGastado | number:'1.0-0':'es-CL' }} gastado</span>
+        <span class="summary-available">$ {{ disponible | number:'1.0-0':'es-CL' }} disponible</span>
+      </div>
     </div>
 
-    <p style="margin: 12px 0 0; font-size: 0.8rem; opacity: 0.7;">
-      Presupuesto mensual: $ {{ monthlyBudget | number:'1.0-0' }}
-    </p>
-  </div>
+    <!-- Lista -->
+    <ion-list class="budget-list">
 
-  <!-- Lista de presupuestos por categoría -->
-  <ion-list>
-    @for(budget of budgets; track budget.id) {
-      <ion-item lines="none" style="margin-bottom: 12px; --border-radius: 12px; --background: var(--ion-color-light);">
-        <ion-icon
-          [name]="budget.category_icon || 'cash-outline'"
-          slot="start"
-          style="font-size: 24px; color: var(--ion-color-primary);">
-        </ion-icon>
-        <ion-label>
-          <h3 style="font-weight: 600;">{{ budget.category_name }}</h3>
-          <p style="font-size: 0.8rem; color: var(--ion-color-medium);">
-            $ {{ budget.spent_amount | number:'1.0-0' }} / $ {{ budget.amount | number:'1.0-0' }}
-          </p>
+      @for(budget of budgets; track budget.id) {
+        <div class="budget-item">
+          <div class="budget-item-header">
+            <div class="budget-icon-wrapper">
+              <ion-icon
+                [name]="budget.category_icon || 'cash-outline'"
+                class="budget-icon">
+              </ion-icon>
+            </div>
+            <div class="budget-item-info">
+              <h3 class="budget-name">{{ budget.category_name }}</h3>
+              <p class="budget-amounts">
+                $ {{ budget.spent_amount | number:'1.0-0':'es-CL' }} / $ {{ budget.amount | number:'1.0-0':'es-CL' }}
+              </p>
+            </div>
+            <div class="budget-item-right">
+              <span
+                class="budget-pct"
+                [class.danger]="budget.progress_percentage >= 100"
+                [class.warning]="budget.progress_percentage >= 80 && budget.progress_percentage < 100">
+                {{ budget.progress_percentage | number:'1.0-0' }}%
+              </span>
+              <div class="budget-actions">
+                <button class="budget-action-btn edit" (click)="editarPresupuesto(budget)">
+                  <ion-icon name="create-outline"></ion-icon>
+                </button>
+                <button class="budget-action-btn delete" (click)="eliminarPresupuesto(budget)">
+                  <ion-icon name="trash-outline"></ion-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+
           <ion-progress-bar
             [value]="budget.progress_percentage / 100"
             [color]="budget.progress_percentage >= 100 ? 'danger' : budget.progress_percentage >= 80 ? 'warning' : 'success'"
-            style="margin-top: 6px; border-radius: 4px;">
+            class="budget-progress">
           </ion-progress-bar>
-        </ion-label>
-        <ion-note slot="end" style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
-          <span [style.color]="budget.progress_percentage >= 100 ? 'var(--ion-color-danger)' : 'var(--ion-color-medium)'">
-            {{ budget.progress_percentage | number:'1.0-0' }}%
-          </span>
-          <div style="display: flex; gap: 4px;">
-            <ion-button fill="clear" size="small" (click)="editarPresupuesto(budget)">
-              <ion-icon name="create-outline" slot="icon-only"></ion-icon>
-            </ion-button>
-            <ion-button fill="clear" size="small" color="danger" (click)="eliminarPresupuesto(budget)">
-              <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
-            </ion-button>
-          </div>
-        </ion-note>
-      </ion-item>
-    }
+        </div>
+      }
 
-    @if(budgets.length === 0) {
-      <div style="text-align: center; padding: 40px 16px; color: var(--ion-color-medium);">
-        <ion-icon name="wallet-outline" style="font-size: 48px; display: block; margin: 0 auto 12px;"></ion-icon>
-        <p>No tienes presupuestos este mes.</p>
-        <p style="font-size: 0.85rem;">Toca el botón + para agregar uno.</p>
-      </div>
-    }
-  </ion-list>
+      @if(budgets.length === 0) {
+        <div class="empty-state">
+          <ion-icon name="wallet-outline" class="empty-icon"></ion-icon>
+          <p>No tienes presupuestos este mes.</p>
+          <p class="empty-hint">Toca el botón + para agregar uno.</p>
+        </div>
+      }
 
-  <!-- Botón flotante + -->
+    </ion-list>
+
+  </div>
+
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="agregarPresupuesto()">
+    <ion-fab-button class="budget-fab" (click)="agregarPresupuesto()">
       <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>

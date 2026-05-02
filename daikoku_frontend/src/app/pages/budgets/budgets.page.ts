@@ -8,7 +8,15 @@ import {
   AlertController, ModalController
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { addOutline, trashOutline, createOutline } from 'ionicons/icons';
+import {
+  addOutline, trashOutline, createOutline, walletOutline, cashOutline,
+  restaurantOutline, carOutline, homeOutline, medkitOutline,
+  shirtOutline, schoolOutline, gameControllerOutline, airplaneOutline,
+  briefcaseOutline, laptopOutline, giftOutline,
+  heartOutline, musicalNotesOutline, fitnessOutline, pawOutline,
+  cartOutline, phonePortraitOutline, tvOutline, busOutline,
+  waterOutline, flashOutline, wifiOutline, bookOutline
+} from 'ionicons/icons';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { CategoryPickerComponent } from '../../components/category-picker/category-picker.component';
@@ -47,7 +55,6 @@ export class BudgetsPage implements OnInit {
 
   budgets: Budget[]      = [];
   categories: Category[] = [];
-  monthlyBudget          = 0;
   totalPresupuestado     = 0;
   totalGastado           = 0;
   loading                = false;
@@ -61,7 +68,15 @@ export class BudgetsPage implements OnInit {
     private alertCtrl: AlertController,
     private modalCtrl: ModalController,
   ) {
-    addIcons({ addOutline, trashOutline, createOutline });
+    addIcons({
+      addOutline, trashOutline, createOutline, walletOutline, cashOutline,
+      restaurantOutline, carOutline, homeOutline, medkitOutline,
+      shirtOutline, schoolOutline, gameControllerOutline, airplaneOutline,
+      briefcaseOutline, laptopOutline, giftOutline,
+      heartOutline, musicalNotesOutline, fitnessOutline, pawOutline,
+      cartOutline, phonePortraitOutline, tvOutline, busOutline,
+      waterOutline, flashOutline, wifiOutline, bookOutline
+    });
   }
 
   ngOnInit() {
@@ -73,22 +88,16 @@ export class BudgetsPage implements OnInit {
   }
 
   get disponible(): number {
-    return this.monthlyBudget - this.totalPresupuestado;
+    return this.totalPresupuestado - this.totalGastado;
   }
 
   get presupuestoUsadoPct(): number {
-    if (this.monthlyBudget <= 0) return 0;
-    return Math.min(this.totalGastado / this.monthlyBudget * 100, 100);
+    if (this.totalPresupuestado <= 0) return 0;
+    return Math.min(this.totalGastado / this.totalPresupuestado * 100, 100);
   }
 
   cargarDatos() {
     this.loading = true;
-
-    this.http.get<any>(`${this.apiUrl}/auth/profile/`).subscribe({
-      next: user => {
-        this.monthlyBudget = parseFloat(user.monthly_budget) || 0;
-      }
-    });
 
     this.http.get<Budget[]>(`${this.apiUrl}/budgets/?month=${this.currentMonth}`).subscribe({
       next: data => {
