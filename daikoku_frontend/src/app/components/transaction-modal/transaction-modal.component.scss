@@ -1,0 +1,340 @@
+// ── Toolbar ───────────────────────────────────────────────────────────
+
+.modal-toolbar {
+  --background: #3F4531;
+  --color: #91F9E5;
+  --border-color: transparent;
+}
+
+.modal-toolbar ion-button {
+  --color: #76F7BF;
+  font-weight: 700;
+}
+
+// ── Content ───────────────────────────────────────────────────────────
+
+.modal-content {
+  --background: linear-gradient(
+    180deg,
+    #5FDD9D 0%,
+    #84EEA3 45%,
+    #AAFFA9 100%
+  );
+}
+
+// ── Tipo ──────────────────────────────────────────────────────────────
+
+.type-selector {
+  display: flex;
+  gap: 12px;
+  padding: 20px 16px 8px;
+  background: transparent;
+}
+
+.type-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 2px solid transparent;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 15px;
+  color: #3F4531;
+  transition: all 0.2s;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  margin: 0;
+
+  ion-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  span {
+    line-height: 1;
+  }
+}
+
+.type-btn.active-expense {
+  background: #ffeaea;
+  border-color: #d9534f;
+  color: #d9534f;
+
+  ion-icon { color: #d9534f; }
+}
+
+.type-btn.active-income {
+  background: #e8faf0;
+  border-color: #499167;
+  color: #499167;
+
+  ion-icon { color: #499167; }
+}
+
+// ── Monto ─────────────────────────────────────────────────────────────
+
+.amount-section {
+  background: rgba(255, 255, 255, 0.92);
+  margin: 16px;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.amount-label {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #499167;
+}
+
+.amount-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.amount-currency {
+  font-size: 32px;
+  font-weight: 900;
+  color: #3F4531;
+}
+
+.amount-input-native {
+  font-size: 36px;
+  font-weight: 900;
+  color: #3F4531;
+  border: none;
+  outline: none;
+  background: transparent;
+  width: 100%;
+  font-family: inherit;
+  padding: 0;
+  margin: 0;
+}
+
+.amount-input-native::placeholder {
+  color: #ccc;
+}
+
+// ── Campos ────────────────────────────────────────────────────────────
+
+.fields-section {
+  margin: 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.field-group {
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 16px;
+  padding: 12px 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.field-label {
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #499167;
+}
+
+.field-item {
+  --background: transparent;
+  --border-color: transparent;
+  --padding-start: 0;
+  --inner-padding-end: 0;
+}
+
+.field-icon {
+  color: #5FDD9D;
+  font-size: 20px;
+  margin-right: 8px;
+}
+
+// ── Categorías ────────────────────────────────────────────────────────
+
+.category-section {
+  margin: 12px 16px;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.loading-categories {
+  text-align: center;
+  padding: 16px;
+}
+
+.category-grid {
+  padding: 0;
+  margin-top: 8px;
+}
+
+.category-col {
+  text-align: center;
+  padding: 4px;
+}
+
+.category-item {
+  cursor: pointer;
+  border-radius: 12px;
+  padding: 10px 4px;
+  border: 2px solid transparent;
+  background: rgba(255, 255, 255, 0.7);
+  transition: all 0.2s;
+}
+
+.category-item.selected {
+  background: #e8faf0;
+  border-color: #5FDD9D;
+}
+
+.category-item.new-category {
+  border: 2px dashed #ccc;
+  background: transparent;
+}
+
+.category-icon {
+  font-size: 26px;
+  display: block;
+  margin: 0 auto 4px;
+  color: #499167;
+}
+
+.new-icon { color: #aaa; }
+
+.category-item.selected .category-icon { color: #5FDD9D; }
+
+.category-name {
+  margin: 0;
+  font-size: 0.65rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #3F4531;
+}
+
+// ── Nueva categoría ───────────────────────────────────────────────────
+
+.new-category-form {
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 14px;
+  padding: 14px;
+  margin-top: 12px;
+}
+
+.new-category-title {
+  margin: 0 0 10px;
+  font-weight: 700;
+  font-size: 14px;
+  color: #3F4531;
+}
+
+.icon-preview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 10px;
+  padding: 12px;
+  cursor: pointer;
+  border: 1px solid rgba(73, 145, 103, 0.3);
+  color: #3F4531;
+  font-size: 0.9rem;
+}
+
+.preview-icon {
+  font-size: 28px;
+  color: #499167;
+}
+
+.icon-grid { padding: 8px 0 0; }
+
+// ── Error ─────────────────────────────────────────────────────────────
+
+.error-msg {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 16px;
+  padding: 10px 14px;
+  background: #ffeaea;
+  border-radius: 10px;
+  color: #d9534f;
+  font-size: 0.9rem;
+
+  ion-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+}
+
+// ── Botón guardar ─────────────────────────────────────────────────────
+
+.save-btn-wrapper {
+  padding: 16px 16px 32px;
+}
+
+.save-btn {
+  --background: #3F4531;
+  --background-activated: #499167;
+  --color: #91F9E5;
+  --border-radius: 16px;
+  font-weight: 700;
+  font-size: 16px;
+  height: 52px;
+}
+.type-emoji {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.type-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 2px solid transparent;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 15px;
+  color: #3F4531;
+  transition: all 0.2s;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.date-display {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  cursor: pointer;
+  color: #3F4531;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.custom-datetime {
+  --background: transparent;
+  --title-color: #3F4531;
+  --wheel-highlight-background: rgba(95, 221, 157, 0.2);
+  --wheel-fade-background-rgb: 255, 255, 255;
+  border-radius: 12px;
+  margin-top: 8px;
+}

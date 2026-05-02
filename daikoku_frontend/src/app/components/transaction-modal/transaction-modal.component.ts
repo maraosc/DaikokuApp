@@ -1,15 +1,16 @@
 import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import {
   IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonButtons,
   IonItem, IonLabel, IonInput, IonSelect, IonSelectOption, IonIcon,
   IonSegment, IonSegmentButton, IonText, IonSpinner, IonGrid, IonRow, IonCol,
-  ModalController
+  IonDatetime, ModalController,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
-  closeOutline, addOutline,
+  closeOutline, addOutline, calendarOutline, chevronDownOutline,
+  checkmarkOutline, alertCircleOutline, pencilOutline,
   restaurantOutline, carOutline, homeOutline, medkitOutline,
   shirtOutline, schoolOutline, gameControllerOutline, airplaneOutline,
   cashOutline, briefcaseOutline, laptopOutline, giftOutline,
@@ -64,6 +65,7 @@ export const AVAILABLE_ICONS = [
     IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonButtons,
     IonItem, IonLabel, IonInput, IonSelect, IonSelectOption, IonIcon,
     IonSegment, IonSegmentButton, IonText, IonSpinner, IonGrid, IonRow, IonCol,
+    IonDatetime,
   ]
 })
 export class TransactionModalComponent implements OnInit, AfterViewInit {
@@ -73,9 +75,11 @@ export class TransactionModalComponent implements OnInit, AfterViewInit {
 
   type: 'income' | 'expense'        = 'expense';
   amount: number | null             = null;
+  amountDisplay                     = '';
   description                       = '';
   date                              = new Date().toISOString().split('T')[0];
   selectedCategoryId: number | null = null;
+  mostrarFecha                      = false;
 
   categories: Category[] = [];
   loadingCategories      = false;
@@ -96,7 +100,8 @@ export class TransactionModalComponent implements OnInit, AfterViewInit {
     private http: HttpClient
   ) {
     addIcons({
-      closeOutline, addOutline,
+      closeOutline, addOutline, calendarOutline, chevronDownOutline,
+      checkmarkOutline, alertCircleOutline, pencilOutline,
       restaurantOutline, carOutline, homeOutline, medkitOutline,
       shirtOutline, schoolOutline, gameControllerOutline, airplaneOutline,
       cashOutline, briefcaseOutline, laptopOutline, giftOutline,
@@ -114,12 +119,28 @@ export class TransactionModalComponent implements OnInit, AfterViewInit {
     if (this.transaction) {
       this.type               = this.transaction.type;
       this.amount             = this.transaction.amount;
+      this.amountDisplay      = this.transaction.amount
+        ? parseInt(this.transaction.amount).toLocaleString('es-CL')
+        : '';
       this.description        = this.transaction.description;
       this.date               = this.transaction.date;
       this.selectedCategoryId = this.transaction.category;
     } else {
       this.type = this.transactionType;
     }
+  }
+
+  get dateFormatted(): string {
+    if (!this.date) return 'Seleccionar fecha';
+    const [year, month, day] = this.date.split('-');
+    return `${day}/${month}/${year}`;
+  }
+
+  onAmountChange(value: string) {
+    const clean = value.replace(/\D/g, '');
+    this.amount = clean ? parseInt(clean) : null;
+    this.amountDisplay = clean ? parseInt(clean).toLocaleString('es-CL') : '';
+    this.error = '';
   }
 
   loadCategories() {
@@ -147,6 +168,16 @@ export class TransactionModalComponent implements OnInit, AfterViewInit {
   async guardar() {
     if (!this.amount || this.amount <= 0) {
       this.error = 'Ingresa un monto válido.';
+      return;
+    }
+
+    if (!this.description.trim()) {
+      this.error = 'Ingresa una descripción.';
+      return;
+    }
+
+    if (!this.selectedCategoryId && !(this.showNewCategory && this.newCategoryName.trim())) {
+      this.error = 'Selecciona o crea una categoría.';
       return;
     }
 

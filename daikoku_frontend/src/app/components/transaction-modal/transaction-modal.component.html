@@ -1,11 +1,11 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar class="modal-toolbar">
     <ion-buttons slot="start">
       <ion-button fill="clear" (click)="cancelar()">
         <ion-icon name="close-outline" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>Nueva transacción</ion-title>
+    <ion-title>{{ transaction ? 'Editar transacción' : 'Nueva transacción' }}</ion-title>
     <ion-buttons slot="end">
       <ion-button fill="clear" [disabled]="loading" (click)="guardar()">
         @if(loading) {
@@ -18,186 +18,175 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content class="modal-content">
 
   <!-- Tipo: ingreso / gasto -->
-  <ion-segment [(ngModel)]="type" style="margin-bottom: 24px;">
-    <ion-segment-button value="expense">
-      <ion-label>Gasto</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="income">
-      <ion-label>Ingreso</ion-label>
-    </ion-segment-button>
-  </ion-segment>
+  <div class="type-selector">
+    <div
+      class="type-btn"
+      [class.active-expense]="type === 'expense'"
+      (click)="type = 'expense'">
+      Gasto
+    </div>
+    <div
+      class="type-btn"
+      [class.active-income]="type === 'income'"
+      (click)="type = 'income'">
+      Ingreso
+    </div>
+  </div>
 
   <!-- Monto -->
-  <ion-item>
-    <ion-label position="floating">Monto</ion-label>
-    <ion-input
-      type="number"
-      [(ngModel)]="amount"
-      (ionInput)="error = ''"
-      placeholder="0">
-    </ion-input>
-  </ion-item>
+  <div class="amount-section">
+    <p class="amount-label">Monto</p>
+    <div class="amount-input-wrapper">
+      <span class="amount-currency">$</span>
+      <input
+        type="text"
+        inputmode="numeric"
+        [(ngModel)]="amountDisplay"
+        (ngModelChange)="onAmountChange($event)"
+        placeholder="0"
+        class="amount-input-native">
+    </div>
+  </div>
 
-  <!-- Descripción -->
-  <ion-item style="margin-top: 12px;">
-    <ion-label position="floating">Descripción (opcional)</ion-label>
-    <ion-input
-      type="text"
-      [(ngModel)]="description"
-      placeholder="Ej: Almuerzo, arriendo...">
-    </ion-input>
-  </ion-item>
+  <!-- Campos -->
+  <div class="fields-section">
 
-  <!-- Fecha -->
-  <ion-item style="margin-top: 12px;">
-    <ion-label position="floating">Fecha</ion-label>
-    <ion-input
-      type="date"
-      [(ngModel)]="date">
-    </ion-input>
-  </ion-item>
+    <div class="field-group">
+      <p class="field-label">Descripción</p>
+      <ion-item class="field-item">
+        <ion-icon name="pencil-outline" slot="start" class="field-icon"></ion-icon>
+        <ion-input
+          type="text"
+          [(ngModel)]="description"
+          (ionInput)="error = ''"
+          placeholder="Ej: Almuerzo, arriendo...">
+        </ion-input>
+      </ion-item>
+    </div>
+
+    <div class="field-group">
+      <p class="field-label">Fecha</p>
+      <div class="date-display" (click)="mostrarFecha = !mostrarFecha">
+        <ion-icon name="calendar-outline" class="field-icon"></ion-icon>
+        <span>{{ dateFormatted }}</span>
+        <ion-icon name="chevron-down-outline" style="margin-left: auto; color: #499167;"></ion-icon>
+      </div>
+      @if(mostrarFecha) {
+        <ion-datetime
+          [(ngModel)]="date"
+          presentation="date"
+          locale="es-CL"
+          [preferWheel]="false"
+          (ionChange)="mostrarFecha = false"
+          class="custom-datetime">
+        </ion-datetime>
+      }
+    </div>
+
+  </div>
 
   <!-- Categoría -->
-  <div style="margin-top: 24px;">
-    <p style="font-weight: 600; margin-bottom: 8px;">Categoría <span style="font-weight: 400; color: var(--ion-color-medium); font-size: 0.85rem;">(opcional)</span></p>
+  <div class="category-section">
+    <p class="field-label">Categoría</p>
 
     @if(loadingCategories) {
-      <div style="text-align: center; padding: 16px;">
+      <div class="loading-categories">
         <ion-spinner name="crescent"></ion-spinner>
       </div>
     } @else {
-
-      <!-- Grid de categorías existentes -->
-      <ion-grid style="padding: 0;">
+      <ion-grid class="category-grid">
         <ion-row>
           @for(cat of categories; track cat.id) {
-            <ion-col size="3" style="text-align: center; padding: 4px;">
+            <ion-col size="3" class="category-col">
               <div
-                (click)="selectedCategoryId = cat.id"
-                style="
-                  cursor: pointer;
-                  border-radius: 12px;
-                  padding: 8px 4px;
-                  border: 2px solid transparent;
-                  transition: all 0.2s;
-                "
-                [style.border-color]="selectedCategoryId === cat.id ? 'var(--ion-color-primary)' : 'transparent'"
-                [style.background]="selectedCategoryId === cat.id ? 'var(--ion-color-primary-tint)' : 'var(--ion-color-light)'">
+                class="category-item"
+                [class.selected]="selectedCategoryId === cat.id"
+                (click)="selectedCategoryId = cat.id">
                 <ion-icon
                   [name]="cat.category_icon || 'cash-outline'"
-                  style="font-size: 28px; display: block; margin: 0 auto 4px;">
+                  class="category-icon">
                 </ion-icon>
-                <p style="margin: 0; font-size: 0.7rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                  {{ cat.category_name }}
-                </p>
+                <p class="category-name">{{ cat.category_name }}</p>
               </div>
             </ion-col>
           }
 
-          <!-- Botón agregar nueva categoría -->
-          <ion-col size="3" style="text-align: center; padding: 4px;">
+          <ion-col size="3" class="category-col">
             <div
-              (click)="showNewCategory = !showNewCategory"
-              style="
-                cursor: pointer;
-                border-radius: 12px;
-                padding: 8px 4px;
-                background: var(--ion-color-light);
-                border: 2px dashed var(--ion-color-medium);
-              ">
-              <ion-icon
-                name="add-outline"
-                style="font-size: 28px; display: block; margin: 0 auto 4px; color: var(--ion-color-medium);">
-              </ion-icon>
-              <p style="margin: 0; font-size: 0.7rem; color: var(--ion-color-medium);">Nueva</p>
+              class="category-item new-category"
+              (click)="showNewCategory = !showNewCategory">
+              <ion-icon name="add-outline" class="category-icon new-icon"></ion-icon>
+              <p class="category-name">Nueva</p>
             </div>
           </ion-col>
         </ion-row>
       </ion-grid>
 
-      <!-- Formulario nueva categoría -->
       @if(showNewCategory) {
-        <div style="background: var(--ion-color-light); border-radius: 12px; padding: 16px; margin-top: 12px;">
-          <p style="margin: 0 0 12px; font-weight: 600;">Nueva categoría</p>
+        <div class="new-category-form">
+          <p class="new-category-title">Nueva categoría</p>
 
-          <ion-item>
-            <ion-label position="floating">Nombre</ion-label>
+          <ion-item class="field-item">
             <ion-input
               type="text"
               [(ngModel)]="newCategoryName"
-              placeholder="Ej: Gimnasio">
+              placeholder="Nombre (ej: Gimnasio)">
             </ion-input>
           </ion-item>
 
-          <!-- Selector de ícono -->
-          <div style="margin-top: 12px;">
-            <p style="margin: 0 0 8px; font-size: 0.9rem; color: var(--ion-color-medium);">Ícono</p>
+          <p class="field-label" style="margin-top: 12px;">Ícono</p>
 
-<div
-  (click)="showIconPicker = !showIconPicker"
-  style="
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: white;
-    border-radius: 8px;
-    padding: 12px;
-    cursor: pointer;
-    border: 1px solid var(--ion-color-light-shade);
-  ">
-  <ion-icon [name]="newCategoryIcon" style="font-size: 28px;"></ion-icon>
-  <span style="color: var(--ion-color-medium); font-size: 0.9rem;">Toca para cambiar</span>
-  <ion-icon name="add-outline" style="margin-left: auto; color: var(--ion-color-medium);"></ion-icon>
-</div>
-
-            @if(showIconPicker) {
-              <ion-grid style="padding: 8px 0 0;">
-                <ion-row>
-                  @for(icon of availableIcons; track icon.name) {
-                    <ion-col size="3" style="text-align: center; padding: 4px;">
-                      <div
-                        (click)="selectIcon(icon.name)"
-                        style="
-                          cursor: pointer;
-                          border-radius: 8px;
-                          padding: 8px 4px;
-                          transition: all 0.2s;
-                        "
-                        [style.background]="newCategoryIcon === icon.name ? 'var(--ion-color-primary-tint)' : 'white'"
-                        [style.border]="newCategoryIcon === icon.name ? '2px solid var(--ion-color-primary)' : '2px solid transparent'">
-                        <ion-icon [name]="icon.name" style="font-size: 24px; display: block; margin: 0 auto 4px;"></ion-icon>
-                        <p style="margin: 0; font-size: 0.65rem;">{{ icon.label }}</p>
-                      </div>
-                    </ion-col>
-                  }
-                </ion-row>
-              </ion-grid>
-            }
+          <div class="icon-preview" (click)="showIconPicker = !showIconPicker">
+            <ion-icon [name]="newCategoryIcon" class="preview-icon"></ion-icon>
+            <span>Toca para cambiar</span>
+            <ion-icon name="chevron-down-outline" style="margin-left: auto;"></ion-icon>
           </div>
+
+          @if(showIconPicker) {
+            <ion-grid class="icon-grid">
+              <ion-row>
+                @for(icon of availableIcons; track icon.name) {
+                  <ion-col size="3" class="category-col">
+                    <div
+                      class="category-item"
+                      [class.selected]="newCategoryIcon === icon.name"
+                      (click)="selectIcon(icon.name)">
+                      <ion-icon [name]="icon.name" class="category-icon"></ion-icon>
+                      <p class="category-name">{{ icon.label }}</p>
+                    </div>
+                  </ion-col>
+                }
+              </ion-row>
+            </ion-grid>
+          }
         </div>
       }
     }
   </div>
 
   @if(error) {
-    <ion-text color="danger">
-      <p style="padding: 8px 0;">{{ error }}</p>
-    </ion-text>
+    <div class="error-msg">
+      <ion-icon name="alert-circle-outline"></ion-icon>
+      <span>{{ error }}</span>
+    </div>
   }
 
-  <ion-button
-    expand="block"
-    style="margin-top: 24px; margin-bottom: 32px;"
-    [disabled]="loading"
-    (click)="guardar()">
-    @if(loading) {
-      <ion-spinner name="crescent"></ion-spinner>
-    } @else {
-      Guardar transacción
-    }
-  </ion-button>
+  <div class="save-btn-wrapper">
+    <ion-button
+      expand="block"
+      class="save-btn"
+      [disabled]="loading"
+      (click)="guardar()">
+      @if(loading) {
+        <ion-spinner name="crescent"></ion-spinner>
+      } @else {
+        <ion-icon name="checkmark-outline" slot="start"></ion-icon>
+        {{ transaction ? 'Guardar cambios' : 'Guardar transacción' }}
+      }
+    </ion-button>
+  </div>
 
 </ion-content>

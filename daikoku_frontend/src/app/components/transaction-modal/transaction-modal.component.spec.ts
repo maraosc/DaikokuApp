@@ -19,4 +19,6 @@ describe('TransactionModalComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  mostrarFecha = false;
 });
