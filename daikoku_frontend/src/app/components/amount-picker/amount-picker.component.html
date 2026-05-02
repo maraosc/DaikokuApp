@@ -1,0 +1,55 @@
+<ion-header>
+  <ion-toolbar class="amount-toolbar">
+    <ion-buttons slot="start">
+      <ion-button fill="clear" (click)="cancelar()">
+        <ion-icon name="close-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Monto del presupuesto</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="amount-content">
+  <div class="amount-wrapper">
+
+    <!-- Categoría seleccionada -->
+    <div class="category-preview">
+      <div class="category-preview-icon">
+        <ion-icon [name]="categoryIcon || 'cash-outline'"></ion-icon>
+      </div>
+      <p class="category-preview-name">{{ categoryName }}</p>
+    </div>
+
+    <!-- Input monto -->
+    <div class="amount-card">
+      <p class="amount-label">¿Cuánto quieres presupuestar?</p>
+      <div class="amount-input-row">
+        <span class="amount-currency">$</span>
+        <input
+          type="text"
+          inputmode="numeric"
+          [value]="amountDisplay"
+          (input)="onAmountChange($any($event.target).value)"
+          placeholder="0"
+          class="amount-input"
+          autofocus>
+      </div>
+    </div>
+
+    @if(error) {
+      <div class="error-msg">
+        <ion-icon name="alert-circle-outline"></ion-icon>
+        <span>{{ error }}</span>
+      </div>
+    }
+
+    <ion-button
+      expand="block"
+      class="confirm-btn"
+      (click)="confirmar()">
+      <ion-icon name="checkmark-outline" slot="start"></ion-icon>
+      Confirmar
+    </ion-button>
+
+  </div>
+</ion-content>

@@ -1,0 +1,131 @@
+.amount-toolbar {
+  --background: #3F4531;
+  --color: #91F9E5;
+  --border-color: transparent;
+}
+
+.amount-toolbar ion-button {
+  --color: #76F7BF;
+}
+
+.amount-content {
+  --background: linear-gradient(
+    180deg,
+    #5FDD9D 0%,
+    #84EEA3 45%,
+    #AAFFA9 100%
+  );
+}
+
+.amount-wrapper {
+  padding: 24px 18px;
+}
+
+// ── Categoría preview ─────────────────────────────────────────────────
+
+.category-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.category-preview-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+  margin-bottom: 10px;
+
+  ion-icon {
+    font-size: 32px;
+    color: #499167;
+  }
+}
+
+.category-preview-name {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: #3F4531;
+}
+
+// ── Input monto ───────────────────────────────────────────────────────
+
+.amount-card {
+  background: rgba(255,255,255,0.92);
+  border-radius: 22px;
+  padding: 24px 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  margin-bottom: 16px;
+}
+
+.amount-label {
+  margin: 0 0 16px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #499167;
+  text-align: center;
+}
+
+.amount-input-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.amount-currency {
+  font-size: 36px;
+  font-weight: 900;
+  color: #3F4531;
+}
+
+.amount-input {
+  font-size: 42px;
+  font-weight: 900;
+  color: #3F4531;
+  border: none;
+  outline: none;
+  background: transparent;
+  width: 100%;
+  font-family: inherit;
+  text-align: left;
+
+  &::placeholder {
+    color: #ccc;
+  }
+}
+
+// ── Error ─────────────────────────────────────────────────────────────
+
+.error-msg {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: #ffeaea;
+  border-radius: 10px;
+  color: #d9534f;
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+
+  ion-icon { font-size: 18px; }
+}
+
+// ── Botón ─────────────────────────────────────────────────────────────
+
+.confirm-btn {
+  --background: #3F4531;
+  --color: #91F9E5;
+  --border-radius: 16px;
+  font-weight: 700;
+  font-size: 16px;
+  height: 52px;
+  margin-top: 8px;
+}

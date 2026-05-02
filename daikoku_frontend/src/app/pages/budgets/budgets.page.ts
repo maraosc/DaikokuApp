@@ -20,6 +20,7 @@ import {
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { CategoryPickerComponent } from '../../components/category-picker/category-picker.component';
+import { AmountPickerComponent } from '../../components/amount-picker/amount-picker.component';
 
 interface Budget {
   id: number;
@@ -136,31 +137,26 @@ export class BudgetsPage implements OnInit {
     }
   }
 
-  async pedirMonto(categoryId: number) {
-    const alert = await this.alertCtrl.create({
-      header: 'Monto del presupuesto',
-      inputs: [
-        {
-          name: 'amount',
-          type: 'number',
-          placeholder: '0',
-        }
-      ],
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        {
-          text: 'Guardar',
-          handler: (data) => {
-            const amount = parseFloat(data.amount);
-            if (!amount || amount <= 0) return false;
-            this.guardarPresupuesto(categoryId, amount);
-            return true;
-          }
-        }
-      ]
-    });
-    await alert.present();
+async pedirMonto(categoryId: number) {
+  const cat = this.categories.find(c => c.id === categoryId);
+
+  const modal = await this.modalCtrl.create({
+    component: AmountPickerComponent,
+    componentProps: {
+      categoryName: cat?.category_name ?? '',
+      categoryIcon: cat?.category_icon ?? 'cash-outline',
+    },
+    breakpoints: [0, 0.6],
+    initialBreakpoint: 0.6,
+  });
+
+  await modal.present();
+
+  const { data, role } = await modal.onWillDismiss();
+  if (role === 'confirm' && data?.amount) {
+    this.guardarPresupuesto(categoryId, data.amount);
   }
+}
 
   guardarPresupuesto(categoryId: number, amount: number) {
     this.http.post(`${this.apiUrl}/budgets/`, {

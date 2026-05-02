@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar class="picker-toolbar">
     <ion-buttons slot="start">
       <ion-button fill="clear" (click)="cancelar()">
         <ion-icon name="close-outline" slot="icon-only"></ion-icon>
@@ -16,37 +16,29 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="picker-content">
 
   @if(vista === 'list') {
 
     <ion-searchbar
       [(ngModel)]="busqueda"
       placeholder="Buscar categoría..."
-      style="padding: 8px 8px 0;">
+      class="picker-searchbar">
     </ion-searchbar>
 
-    <div style="padding: 8px 16px;">
+    <div class="categories-grid">
       <ion-grid style="padding: 0;">
         <ion-row>
           @for(cat of categoriasFiltradas; track cat.id) {
-            <ion-col size="4" style="text-align: center; padding: 6px;">
-              <div
-                (click)="seleccionar(cat)"
-                style="
-                  cursor: pointer;
-                  border-radius: 14px;
-                  padding: 12px 6px;
-                  background: var(--ion-color-light);
-                  transition: all 0.2s;
-                ">
-                <ion-icon
-                  [name]="cat.category_icon || 'cash-outline'"
-                  style="font-size: 32px; display: block; margin: 0 auto 6px; color: var(--ion-color-primary);">
-                </ion-icon>
-                <p style="margin: 0; font-size: 0.75rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                  {{ cat.category_name }}
-                </p>
+            <ion-col size="4" class="cat-col">
+              <div class="cat-item" (click)="seleccionar(cat)">
+                <div class="cat-icon-wrapper">
+                  <ion-icon
+                    [name]="cat.category_icon || 'cash-outline'"
+                    class="cat-icon">
+                  </ion-icon>
+                </div>
+                <p class="cat-name">{{ cat.category_name }}</p>
               </div>
             </ion-col>
           }
@@ -54,8 +46,8 @@
       </ion-grid>
     </div>
 
-    <div style="padding: 8px 16px 24px;">
-      <ion-button expand="block" fill="outline" (click)="vista = 'nueva'">
+    <div class="new-cat-btn-wrapper">
+      <ion-button expand="block" class="new-cat-btn" (click)="vista = 'nueva'">
         <ion-icon name="add-outline" slot="start"></ion-icon>
         Nueva categoría
       </ion-button>
@@ -63,40 +55,32 @@
   }
 
   @if(vista === 'nueva') {
-    <div style="padding: 16px;">
+    <div class="nueva-form">
 
-      <ion-item style="margin-bottom: 16px;">
-        <ion-label position="floating">Nombre</ion-label>
-        <ion-input
-          type="text"
-          [(ngModel)]="newName"
-          (ionInput)="error = ''"
-          placeholder="Ej: Gimnasio">
-        </ion-input>
-      </ion-item>
+      <div class="nueva-field">
+        <p class="nueva-label">Nombre</p>
+        <ion-item class="nueva-item">
+          <ion-input
+            type="text"
+            [(ngModel)]="newName"
+            (ionInput)="error = ''"
+            placeholder="Ej: Gimnasio">
+          </ion-input>
+        </ion-item>
+      </div>
 
-      <p style="font-weight: 600; margin: 16px 0 8px;">Ícono</p>
+      <p class="nueva-label" style="margin-top: 20px;">Ícono</p>
 
       <ion-grid style="padding: 0;">
         <ion-row>
           @for(icon of availableIcons; track icon.name) {
-            <ion-col size="3" style="text-align: center; padding: 4px;">
+            <ion-col size="3" class="cat-col">
               <div
-                (click)="newIcon = icon.name"
-                style="
-                  cursor: pointer;
-                  border-radius: 10px;
-                  padding: 8px 4px;
-                  transition: all 0.2s;
-                "
-                [style.background]="newIcon === icon.name ? 'var(--ion-color-primary-tint)' : 'var(--ion-color-light)'"
-                [style.border]="newIcon === icon.name ? '2px solid var(--ion-color-primary)' : '2px solid transparent'">
-                <ion-icon
-                  [name]="icon.name"
-                  style="font-size: 26px; display: block; margin: 0 auto 4px;"
-                  [style.color]="newIcon === icon.name ? 'var(--ion-color-primary)' : 'inherit'">
-                </ion-icon>
-                <p style="margin: 0; font-size: 0.65rem;">{{ icon.label }}</p>
+                class="icon-item"
+                [class.selected]="newIcon === icon.name"
+                (click)="newIcon = icon.name">
+                <ion-icon [name]="icon.name" class="icon-item-icon"></ion-icon>
+                <p class="icon-item-label">{{ icon.label }}</p>
               </div>
             </ion-col>
           }
@@ -104,14 +88,15 @@
       </ion-grid>
 
       @if(error) {
-        <ion-text color="danger">
-          <p style="padding: 8px 0;">{{ error }}</p>
-        </ion-text>
+        <div class="error-msg">
+          <ion-icon name="alert-circle-outline"></ion-icon>
+          <span>{{ error }}</span>
+        </div>
       }
 
       <ion-button
         expand="block"
-        style="margin-top: 24px; margin-bottom: 32px;"
+        class="create-btn"
         [disabled]="saving"
         (click)="guardarNuevaCategoria()">
         @if(saving) {
