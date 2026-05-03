@@ -1,115 +1,261 @@
 <ion-content class="actions-content">
   <div class="actions-wrapper">
 
-    <!-- Handle -->
     <div class="handle"></div>
 
-    <!-- Resumen -->
-    <div class="goal-summary">
-
-      <div class="goal-summary-header">
-        <div class="goal-avatar">
-          <ion-icon name="trophy-outline"></ion-icon>
+    @if(vista === 'acciones') {
+      <div class="goal-summary">
+        <div class="goal-summary-header">
+          <div class="goal-avatar">
+            <ion-icon name="trophy-outline"></ion-icon>
+          </div>
+          <button class="close-btn" (click)="cancelar()">
+            <ion-icon name="close-outline"></ion-icon>
+          </button>
         </div>
+
+        <h2 class="goal-summary-name">{{ goal?.name }}</h2>
+
+        <div class="goal-progress-ring-wrapper">
+          <div class="goal-progress-ring">
+            <svg viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="40" class="ring-bg"/>
+              <circle cx="50" cy="50" r="40" class="ring-fill"
+                [style.stroke-dashoffset]="251 - (251 * (goal?.progress_percentage / 100))">
+              </circle>
+            </svg>
+            <div class="ring-center">
+              <span class="ring-pct">{{ goal?.progress_percentage | number:'1.0-0' }}%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="goal-amounts-row">
+          <div class="goal-amount-block">
+            <p class="goal-amount-label">Ahorrado</p>
+            <p class="goal-amount-value green">$ {{ goal?.current_amount | number:'1.0-0':'es-CL' }}</p>
+          </div>
+          <div class="goal-amounts-divider"></div>
+          <div class="goal-amount-block">
+            <p class="goal-amount-label">Objetivo</p>
+            <p class="goal-amount-value">$ {{ goal?.target_amount | number:'1.0-0':'es-CL' }}</p>
+          </div>
+          <div class="goal-amounts-divider"></div>
+          <div class="goal-amount-block">
+            <p class="goal-amount-label">Faltan</p>
+            <p class="goal-amount-value mint">$ {{ goal?.remaining_amount | number:'1.0-0':'es-CL' }}</p>
+          </div>
+        </div>
+
+        @if(ufValue > 0) {
+          <p class="goal-uf-hint">{{ enUF }} UF restantes</p>
+        }
+      </div>
+
+      <div class="actions-grid">
+        <button class="action-card" (click)="abrirAporte()">
+          <div class="action-icon green">
+            <ion-icon name="add-circle-outline"></ion-icon>
+          </div>
+          <p class="action-label">Aportar</p>
+        </button>
+
+        <button class="action-card" (click)="abrirSimular()">
+          <div class="action-icon blue">
+            <ion-icon name="calculator-outline"></ion-icon>
+          </div>
+          <p class="action-label">Simular</p>
+        </button>
+
+        <button class="action-card" (click)="abrirEditar()">
+          <div class="action-icon yellow">
+            <ion-icon name="create-outline"></ion-icon>
+          </div>
+          <p class="action-label">Editar</p>
+        </button>
+
+        @if(goal?.state === 'active') {
+          <button class="action-card" (click)="cambiarEstado('paused')">
+            <div class="action-icon orange">
+              <ion-icon name="pause-outline"></ion-icon>
+            </div>
+            <p class="action-label">Pausar</p>
+          </button>
+        }
+
+        @if(goal?.state === 'paused') {
+          <button class="action-card" (click)="cambiarEstado('active')">
+            <div class="action-icon green">
+              <ion-icon name="play-outline"></ion-icon>
+            </div>
+            <p class="action-label">Reactivar</p>
+          </button>
+        }
+
+        @if(goal?.state !== 'cancelled') {
+          <button class="action-card" (click)="confirmarCancelar()">
+            <div class="action-icon red">
+              <ion-icon name="trash-outline"></ion-icon>
+            </div>
+            <p class="action-label">Cancelar meta</p>
+          </button>
+        }
+      </div>
+    }
+
+    @if(vista === 'aportar') {
+      <div class="sub-header">
+        <button class="back-btn" (click)="vista = 'acciones'">
+          <ion-icon name="arrow-back-outline"></ion-icon>
+        </button>
+        <h3 class="sub-title">Aportar</h3>
         <button class="close-btn" (click)="cancelar()">
           <ion-icon name="close-outline"></ion-icon>
         </button>
       </div>
 
-      <h2 class="goal-summary-name">{{ goal?.name }}</h2>
+      <div class="sub-goal-info">
+        <ion-icon name="trophy-outline"></ion-icon>
+        <span>{{ goal?.name }}</span>
+      </div>
 
-      <!-- Progreso circular visual -->
-      <div class="goal-progress-ring-wrapper">
-        <div class="goal-progress-ring">
-          <svg viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="40" class="ring-bg"/>
-            <circle
-              cx="50" cy="50" r="40"
-              class="ring-fill"
-              [style.stroke-dashoffset]="251 - (251 * (goal?.progress_percentage / 100))">
-            </circle>
-          </svg>
-          <div class="ring-center">
-            <span class="ring-pct">{{ goal?.progress_percentage | number:'1.0-0' }}%</span>
-          </div>
+      <div class="balance-card">
+        <p class="balance-label">Balance disponible</p>
+        @if(loadingBalance) {
+          <ion-spinner name="crescent"></ion-spinner>
+        } @else {
+          <p class="balance-value">$ {{ balance | number:'1.0-0':'es-CL' }}</p>
+        }
+      </div>
+
+      <div class="amount-card">
+        <p class="amount-card-label">¿Cuánto quieres aportar?</p>
+        <div class="amount-input-row">
+          <span class="amount-currency">$</span>
+          <input
+            type="text"
+            inputmode="numeric"
+            [value]="aporteMonto"
+            (input)="onAporteChange($any($event.target).value)"
+            placeholder="0"
+            class="amount-input">
+        </div>
+        @if(aporteError) {
+          <p class="amount-error">{{ aporteError }}</p>
+        }
+      </div>
+
+      <button class="confirm-btn" (click)="confirmarAporte()">
+        <ion-icon name="checkmark-outline"></ion-icon>
+        Confirmar aporte
+      </button>
+    }
+
+    @if(vista === 'simular') {
+      <div class="sub-header">
+        <button class="back-btn" (click)="vista = 'acciones'">
+          <ion-icon name="arrow-back-outline"></ion-icon>
+        </button>
+        <h3 class="sub-title">Simulador</h3>
+        <button class="close-btn" (click)="cancelar()">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="sub-goal-info">
+        <ion-icon name="trophy-outline"></ion-icon>
+        <span>Faltan $ {{ goal?.remaining_amount | number:'1.0-0':'es-CL' }}</span>
+      </div>
+
+      <div class="amount-card">
+        <p class="amount-card-label">¿Cuánto ahorrarías por mes?</p>
+        <div class="amount-input-row">
+          <span class="amount-currency">$</span>
+          <input
+            type="text"
+            inputmode="numeric"
+            [value]="simularMonto"
+            (input)="onSimularChange($any($event.target).value)"
+            placeholder="0"
+            class="amount-input">
         </div>
       </div>
 
-      <div class="goal-amounts-row">
-        <div class="goal-amount-block">
-          <p class="goal-amount-label">Ahorrado</p>
-          <p class="goal-amount-value green">$ {{ goal?.current_amount | number:'1.0-0':'es-CL' }}</p>
+      <button class="confirm-btn blue" (click)="calcularSimulacion()">
+        <ion-icon name="calculator-outline"></ion-icon>
+        Calcular
+      </button>
+
+      @if(simularResultado) {
+        <div class="simulacion-resultado">
+          <ion-icon name="trending-up-outline"></ion-icon>
+          <p>{{ simularResultado }}</p>
         </div>
-        <div class="goal-amounts-divider"></div>
-        <div class="goal-amount-block">
-          <p class="goal-amount-label">Objetivo</p>
-          <p class="goal-amount-value">$ {{ goal?.target_amount | number:'1.0-0':'es-CL' }}</p>
-        </div>
-        <div class="goal-amounts-divider"></div>
-        <div class="goal-amount-block">
-          <p class="goal-amount-label">Faltan</p>
-          <p class="goal-amount-value mint">$ {{ goal?.remaining_amount | number:'1.0-0':'es-CL' }}</p>
-        </div>
+      }
+    }
+
+    @if(vista === 'editar') {
+      <div class="sub-header">
+        <button class="back-btn" (click)="vista = 'acciones'">
+          <ion-icon name="arrow-back-outline"></ion-icon>
+        </button>
+        <h3 class="sub-title">Editar meta</h3>
+        <button class="close-btn" (click)="cancelar()">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
       </div>
 
-      @if(ufValue > 0) {
-        <p class="goal-uf-hint">{{ enUF }} UF restantes</p>
-      }
+      <div class="edit-form">
 
-    </div>
-
-    <!-- Acciones -->
-    <div class="actions-grid">
-
-      <button class="action-card" (click)="accion('aportar')">
-        <div class="action-icon green">
-          <ion-icon name="add-circle-outline"></ion-icon>
-        </div>
-        <p class="action-label">Aportar</p>
-      </button>
-
-      <button class="action-card" (click)="accion('simular')">
-        <div class="action-icon blue">
-          <ion-icon name="calculator-outline"></ion-icon>
-        </div>
-        <p class="action-label">Simular</p>
-      </button>
-
-      <button class="action-card" (click)="accion('editar')">
-        <div class="action-icon yellow">
-          <ion-icon name="create-outline"></ion-icon>
-        </div>
-        <p class="action-label">Editar</p>
-      </button>
-
-      @if(goal?.state === 'active') {
-        <button class="action-card" (click)="accion('pausar')">
-          <div class="action-icon orange">
-            <ion-icon name="pause-outline"></ion-icon>
+        <div class="edit-field">
+          <p class="edit-label">Nombre</p>
+          <div class="edit-input-wrapper">
+            <input
+              type="text"
+              [(ngModel)]="editNombre"
+              (input)="editError = ''"
+              placeholder="Nombre de la meta"
+              class="edit-input">
           </div>
-          <p class="action-label">Pausar</p>
-        </button>
-      }
+        </div>
 
-      @if(goal?.state === 'paused') {
-        <button class="action-card" (click)="accion('reactivar')">
-          <div class="action-icon green">
-            <ion-icon name="play-outline"></ion-icon>
+        <div class="edit-field">
+          <p class="edit-label">Monto objetivo</p>
+          <div class="amount-input-row">
+            <span class="amount-currency small">$</span>
+            <input
+              type="text"
+              inputmode="numeric"
+              [value]="editMonto"
+              (input)="onEditMontoChange($any($event.target).value)"
+              placeholder="0"
+              class="amount-input small">
           </div>
-          <p class="action-label">Reactivar</p>
-        </button>
-      }
+        </div>
 
-      @if(goal?.state !== 'cancelled') {
-        <button class="action-card" (click)="accion('cancelar')">
-          <div class="action-icon red">
-            <ion-icon name="trash-outline"></ion-icon>
-          </div>
-          <p class="action-label">Cancelar meta</p>
-        </button>
-      }
+        <div class="edit-field">
+          <p class="edit-label">Fecha límite <span class="edit-optional">(opcional)</span></p>
+          <input
+            type="date"
+            [(ngModel)]="editDeadline"
+            class="edit-input date">
+        </div>
 
-    </div>
+        @if(editError) {
+          <p class="amount-error">{{ editError }}</p>
+        }
+
+        <button class="confirm-btn" [disabled]="saving" (click)="guardarEdicion()">
+          @if(saving) {
+            <ion-spinner name="crescent" style="width:20px;height:20px;"></ion-spinner>
+          } @else {
+            <ion-icon name="checkmark-outline"></ion-icon>
+            Guardar cambios
+          }
+        </button>
+
+      </div>
+    }
 
   </div>
 </ion-content>

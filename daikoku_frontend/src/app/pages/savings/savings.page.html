@@ -20,8 +20,11 @@
     <!-- UF actual -->
     @if(ufValue > 0) {
       <div class="uf-banner">
-        <ion-icon name="trending-up-outline"></ion-icon>
-        <span>UF hoy: <strong>$ {{ ufValue | number:'1.0-0':'es-CL' }}</strong></span>
+        <div class="uf-banner-left">
+          <p class="uf-banner-label">UF HOY</p>
+          <p class="uf-banner-value">$ {{ ufValue | number:'1.0-0':'es-CL' }}</p>
+        </div>
+        <ion-icon name="trending-up-outline" class="uf-banner-icon"></ion-icon>
       </div>
     }
 
@@ -30,7 +33,10 @@
       <p class="section-title">En progreso</p>
 
       @for(goal of goalsActivas; track goal.id) {
-        <div class="goal-card" [class.paused]="goal.state === 'paused'">
+        <div
+          class="goal-card"
+          [class.paused]="goal.state === 'paused'"
+          (click)="cambiarEstado(goal)">
 
           <div class="goal-header">
             <div class="goal-icon-wrapper">
@@ -48,12 +54,11 @@
                 </p>
               }
             </div>
-            <button class="goal-menu-btn" (click)="cambiarEstado(goal)">
+            <div class="goal-menu-btn">
               <ion-icon name="ellipsis-vertical-outline"></ion-icon>
-            </button>
+            </div>
           </div>
 
-          <!-- Progreso -->
           <div class="goal-progress-section">
             <div class="goal-amounts">
               <span class="goal-current">$ {{ goal.current_amount | number:'1.0-0':'es-CL' }}</span>
@@ -73,18 +78,6 @@
             <span class="goal-uf">({{ enUF(goal.remaining_amount) }} UF)</span>
           </p>
 
-          <!-- Acciones -->
-          <div class="goal-actions">
-            <button class="goal-action-btn contribute" (click)="aportar(goal)">
-              <ion-icon name="add-circle-outline"></ion-icon>
-              <span>Aportar</span>
-            </button>
-            <button class="goal-action-btn simulate" (click)="simular(goal)">
-              <ion-icon name="calculator-outline"></ion-icon>
-              <span>Simular</span>
-            </button>
-          </div>
-
         </div>
       }
     }
@@ -96,7 +89,9 @@
       @for(goal of goalsCompletadas; track goal.id) {
         <div class="goal-card completed" [class.cancelled]="goal.state === 'cancelled'">
           <div class="goal-header">
-            <div class="goal-icon-wrapper" [class.completed]="goal.state === 'completed'" [class.cancelled]="goal.state === 'cancelled'">
+            <div class="goal-icon-wrapper"
+              [class.completed]="goal.state === 'completed'"
+              [class.cancelled]="goal.state === 'cancelled'">
               <ion-icon
                 [name]="goal.state === 'completed' ? 'checkmark-circle-outline' : 'close-circle-outline'"
                 class="goal-icon">
@@ -104,7 +99,9 @@
             </div>
             <div class="goal-info">
               <h3 class="goal-name">{{ goal.name }}</h3>
-              <span class="goal-badge" [class.completed]="goal.state === 'completed'" [class.cancelled]="goal.state === 'cancelled'">
+              <span class="goal-badge"
+                [class.completed]="goal.state === 'completed'"
+                [class.cancelled]="goal.state === 'cancelled'">
                 {{ goal.state_display }}
               </span>
             </div>

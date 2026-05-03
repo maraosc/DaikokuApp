@@ -221,3 +221,235 @@
   font-weight: 700;
   color: #3F4531;
 }
+
+// ── Sub vistas ────────────────────────────────────────────────────────
+
+.sub-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.back-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(63,69,49,0.15);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ion-icon { font-size: 18px; color: #3F4531; }
+}
+
+.sub-title {
+  flex: 1;
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: #3F4531;
+}
+
+.sub-goal-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #3F4531;
+  border-radius: 14px;
+  padding: 12px 16px;
+  margin-bottom: 14px;
+  color: #91F9E5;
+  font-weight: 700;
+  font-size: 14px;
+
+  ion-icon { font-size: 18px; color: #76F7BF; }
+}
+
+// ── Balance card ──────────────────────────────────────────────────────
+
+.balance-card {
+  background: rgba(255,255,255,0.92);
+  border-radius: 16px;
+  padding: 14px 18px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.balance-label {
+  margin: 0 0 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #499167;
+}
+
+.balance-value {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 900;
+  color: #3F4531;
+}
+
+// ── Amount card ───────────────────────────────────────────────────────
+
+.amount-card {
+  background: rgba(255,255,255,0.92);
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 14px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.07);
+}
+
+.amount-card-label {
+  margin: 0 0 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #499167;
+  text-align: center;
+}
+
+.amount-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.amount-currency {
+  font-size: 32px;
+  font-weight: 900;
+  color: #3F4531;
+
+  &.small { font-size: 22px; }
+}
+
+.amount-input {
+  flex: 1;
+  font-size: 38px;
+  font-weight: 900;
+  color: #3F4531;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: inherit;
+
+  &::placeholder { color: #ccc; }
+  &.small { font-size: 22px; }
+}
+
+.amount-error {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: #d9534f;
+  font-weight: 600;
+}
+
+// ── Botón confirmar ───────────────────────────────────────────────────
+
+.confirm-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 16px;
+  border: none;
+  background: #3F4531;
+  color: #91F9E5;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-bottom: 14px;
+  transition: opacity 0.2s;
+
+  ion-icon { font-size: 20px; }
+
+  &.blue {
+    background: #3a5bd9;
+    color: white;
+  }
+
+  &:active { opacity: 0.85; }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
+
+// ── Resultado simulación ──────────────────────────────────────────────
+
+.simulacion-resultado {
+  display: flex;
+  gap: 12px;
+  background: rgba(255,255,255,0.92);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+
+  ion-icon {
+    font-size: 24px;
+    color: #3a5bd9;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  p {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: #3F4531;
+    line-height: 1.5;
+  }
+}
+
+// ── Edición ───────────────────────────────────────────────────────────
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.edit-field {
+  background: rgba(255,255,255,0.92);
+  border-radius: 16px;
+  padding: 14px 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.edit-label {
+  margin: 0 0 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #499167;
+}
+
+.edit-optional {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  color: #aaa;
+  font-size: 11px;
+}
+
+.edit-input-wrapper {
+  width: 100%;
+}
+
+.edit-input {
+  width: 100%;
+  font-size: 16px;
+  font-weight: 600;
+  color: #3F4531;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: inherit;
+  box-sizing: border-box;
+
+  &.date { font-size: 15px; }
+  &::placeholder { color: #ccc; }
+}

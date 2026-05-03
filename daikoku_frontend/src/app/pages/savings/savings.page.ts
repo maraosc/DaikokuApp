@@ -193,143 +193,43 @@ export class SavingsPage implements OnInit {
     });
   }
 
-  // ── Editar meta ───────────────────────────────────────────────────
+  // ── Abrir modal de acciones ───────────────────────────────────────
 
-  async editarMeta(goal: Goal) {
-    const alert1 = await this.alertCtrl.create({
-      header: 'Editar meta',
-      inputs: [
-        {
-          name: 'name',
-          type: 'text',
-          value: goal.name,
-          placeholder: 'Nombre de la meta'
-        }
-      ],
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        {
-          text: 'Siguiente',
-          handler: (data) => {
-            if (!data.name?.trim()) return false;
-            this.editarMontoMeta(goal, data.name.trim());
-            return true;
-          }
-        }
-      ]
+  async cambiarEstado(goal: Goal) {
+    const modal = await this.modalCtrl.create({
+      component: GoalActionsComponent,
+      componentProps: { goal, ufValue: this.ufValue },
+      breakpoints: [0, 0.75],
+      initialBreakpoint: 0.75,
     });
-    await alert1.present();
-  }
 
-  async editarMontoMeta(goal: Goal, name: string) {
-    const alert2 = await this.alertCtrl.create({
-      header: 'Monto objetivo',
-      inputs: [
-        {
-          name: 'target_amount',
-          type: 'number',
-          value: String(goal.target_amount),
-          placeholder: 'Monto objetivo'
-        }
-      ],
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        {
-          text: 'Siguiente',
-          handler: (data) => {
-            const amount = parseFloat(data.target_amount);
-            if (!amount || amount <= 0) return false;
-            this.editarFechaMeta(goal, name, amount);
-            return true;
-          }
-        }
-      ]
-    });
-    await alert2.present();
-  }
+    await modal.present();
 
-  async editarFechaMeta(goal: Goal, name: string, target_amount: number) {
-    const alert3 = await this.alertCtrl.create({
-      header: 'Fecha límite',
-      inputs: [
-        {
-          name: 'deadline',
-          type: 'date',
-          value: goal.deadline ?? ''
-        }
-      ],
-      buttons: [
-        {
-          text: 'Sin fecha',
-          handler: () => {
-            this.guardarEdicionMeta(goal.id, name, target_amount, null);
-          }
-        },
-        {
-          text: 'Guardar',
-          handler: (data) => {
-            this.guardarEdicionMeta(goal.id, name, target_amount, data.deadline || null);
-          }
-        }
-      ]
-    });
-    await alert3.present();
-  }
+    const { data, role } = await modal.onWillDismiss();
+    if (role !== 'action' || !data?.action) return;
 
-  guardarEdicionMeta(id: number, name: string, target_amount: number, deadline: string | null) {
-    this.http.patch(`${this.apiUrl}/goals/${id}/`, {
-      name, target_amount, deadline
-    }).subscribe({
-      next: () => this.cargarDatos(),
-      error: () => {}
-    });
+    switch (data.action) {
+      case 'aportar':
+        if (data.amount) this.registrarAporte(goal, data.amount);
+        break;
+      case 'pausar':
+        this.actualizarEstado(goal.id, 'paused');
+        break;
+      case 'reactivar':
+        this.actualizarEstado(goal.id, 'active');
+        break;
+      case 'cancelar':
+        this.actualizarEstado(goal.id, 'cancelled');
+        break;
+      case 'actualizado':
+        this.cargarDatos();
+        break;
+    }
   }
 
   // ── Aportar ───────────────────────────────────────────────────────
 
-  async aportar(goal: Goal) {
-    const hoy   = new Date();
-    const month = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}`;
-
-    this.http.get<any>(`${this.apiUrl}/transactions/summary/?month=${month}`).subscribe({
-      next: async (summary) => {
-        const balance = summary.total_income - summary.total_expenses;
-
-        const alert = await this.alertCtrl.create({
-          header: `Aportar a "${goal.name}"`,
-          message: `Faltan <strong>$${Number(goal.remaining_amount).toLocaleString('es-CL')}</strong><br>Balance disponible: <strong>$${Number(balance).toLocaleString('es-CL')}</strong>`,
-          inputs: [
-            { name: 'amount', type: 'number', placeholder: '0' }
-          ],
-          buttons: [
-            { text: 'Cancelar', role: 'cancel' },
-            {
-              text: 'Aportar',
-              handler: async (data) => {
-                const amount = parseFloat(data.amount);
-
-                if (!amount || amount <= 0) {
-                  this.mostrarError('Ingresa un monto válido.');
-                  return false;
-                }
-
-                if (amount > balance) {
-                  this.mostrarError(`No tienes suficiente balance. Disponible: $${Number(balance).toLocaleString('es-CL')}`);
-                  return false;
-                }
-
-                this.registrarAporte(goal, amount);
-                return true;
-              }
-            }
-          ]
-        });
-        await alert.present();
-      }
-    });
-  }
-
-  private registrarAporte(goal: Goal, amount: number) {
+  registrarAporte(goal: Goal, amount: number) {
     this.http.get<any[]>(`${this.apiUrl}/categories/`).subscribe({
       next: (cats) => {
         const catExistente = cats.find(c =>
@@ -372,89 +272,13 @@ export class SavingsPage implements OnInit {
     });
   }
 
-  // ── Simular ───────────────────────────────────────────────────────
-
-  async simular(goal: Goal) {
-    const alert = await this.alertCtrl.create({
-      header: '¿Cuánto ahorrarías por mes?',
-      inputs: [
-        { name: 'monthly', type: 'number', placeholder: '0' }
-      ],
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        {
-          text: 'Calcular',
-          handler: (data) => {
-            const monthly = parseFloat(data.monthly);
-            if (!monthly || monthly <= 0) return false;
-            const remaining = Number(goal.remaining_amount);
-            const months    = Math.ceil(remaining / monthly);
-            const years     = Math.floor(months / 12);
-            const restMeses = months % 12;
-            let tiempo = '';
-            if (years > 0) tiempo += `${years} año${years > 1 ? 's' : ''} `;
-            if (restMeses > 0) tiempo += `${restMeses} mes${restMeses > 1 ? 'es' : ''}`;
-            if (!tiempo) tiempo = 'menos de 1 mes';
-            this.mostrarSimulacion(goal.name, monthly, tiempo, months);
-            return true;
-          }
-        }
-      ]
-    });
-    await alert.present();
-  }
-
-  async mostrarSimulacion(name: string, monthly: number, tiempo: string, months: number) {
-    const alert = await this.alertCtrl.create({
-      header: '📊 Simulación',
-      message: `
-        Ahorrando <strong>$${monthly.toLocaleString('es-CL')}</strong> por mes,
-        alcanzarías tu meta <strong>"${name}"</strong> en aproximadamente
-        <strong>${tiempo}</strong> (${months} pagos).
-      `,
-      buttons: [{ text: 'Entendido', role: 'cancel' }]
-    });
-    await alert.present();
-  }
-
   // ── Estado ────────────────────────────────────────────────────────
 
-async cambiarEstado(goal: Goal) {
-  const modal = await this.modalCtrl.create({
-    component: GoalActionsComponent,
-    componentProps: { goal, ufValue: this.ufValue },
-    breakpoints: [0, 0.75],
-    initialBreakpoint: 0.75,
-  });
-
-  await modal.present();
-
-  const { data, role } = await modal.onWillDismiss();
-  if (role !== 'action' || !data?.action) return;
-
-  switch (data.action) {
-    case 'aportar':   this.aportar(goal);   break;
-    case 'simular':   this.simular(goal);   break;
-    case 'editar':    this.editarMeta(goal); break;
-    case 'pausar':    this.actualizarEstado(goal.id, 'paused');    break;
-    case 'reactivar': this.actualizarEstado(goal.id, 'active');    break;
-    case 'cancelar':  this.actualizarEstado(goal.id, 'cancelled'); break;
-  }
-}
   actualizarEstado(id: number, state: string) {
     this.http.patch(`${this.apiUrl}/goals/${id}/`, { state }).subscribe({
       next: () => this.cargarDatos(),
       error: () => {}
     });
-  }
-
-  async mostrarError(mensaje: string) {
-    const alert = await this.alertCtrl.create({
-      header: 'Error',
-      message: mensaje,
-      buttons: ['OK']
-    });
-    await alert.present();
   }
 
   // ── Helpers ───────────────────────────────────────────────────────
