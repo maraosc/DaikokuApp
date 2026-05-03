@@ -118,14 +118,14 @@
 
     <div class="home-wrapper">
 
-      <ion-segment [(ngModel)]="vistaActual" class="transactions-segment">
-        <ion-segment-button value="gastos">
-          <ion-label>Gastos</ion-label>
-        </ion-segment-button>
-        <ion-segment-button value="ingresos">
-          <ion-label>Ingresos</ion-label>
-        </ion-segment-button>
-      </ion-segment>
+<ion-segment [(ngModel)]="vistaActual" class="transactions-segment">
+  <ion-segment-button value="gastos">
+    <span class="seg-text">Gastos</span>
+  </ion-segment-button>
+  <ion-segment-button value="ingresos">
+    <span class="seg-text">Ingresos</span>
+  </ion-segment-button>
+</ion-segment>
 
       <ion-list class="transactions-list">
         @for(tx of transactionsFiltradas; track tx.id) {
