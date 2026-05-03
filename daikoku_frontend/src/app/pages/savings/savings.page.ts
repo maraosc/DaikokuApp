@@ -16,6 +16,7 @@ import {
 } from 'ionicons/icons';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
+import { GoalActionsComponent } from '../../components/goal-actions/goal-actions.component';
 
 interface Goal {
   id: number;
@@ -418,42 +419,28 @@ export class SavingsPage implements OnInit {
 
   // ── Estado ────────────────────────────────────────────────────────
 
-  async cambiarEstado(goal: Goal) {
-    const buttons: any[] = [
-      {
-        text: 'Editar',
-        handler: () => this.editarMeta(goal)
-      },
-      { text: 'Cancelar', role: 'cancel' }
-    ];
+async cambiarEstado(goal: Goal) {
+  const modal = await this.modalCtrl.create({
+    component: GoalActionsComponent,
+    componentProps: { goal, ufValue: this.ufValue },
+    breakpoints: [0, 0.75],
+    initialBreakpoint: 0.75,
+  });
 
-    if (goal.state === 'active') {
-      buttons.unshift({
-        text: 'Pausar',
-        handler: () => this.actualizarEstado(goal.id, 'paused')
-      });
-    }
-    if (goal.state === 'paused') {
-      buttons.unshift({
-        text: 'Reactivar',
-        handler: () => this.actualizarEstado(goal.id, 'active')
-      });
-    }
-    if (goal.state !== 'cancelled') {
-      buttons.unshift({
-        text: 'Cancelar meta',
-        role: 'destructive',
-        handler: () => this.actualizarEstado(goal.id, 'cancelled')
-      });
-    }
+  await modal.present();
 
-    const alert = await this.alertCtrl.create({
-      header: goal.name,
-      buttons
-    });
-    await alert.present();
+  const { data, role } = await modal.onWillDismiss();
+  if (role !== 'action' || !data?.action) return;
+
+  switch (data.action) {
+    case 'aportar':   this.aportar(goal);   break;
+    case 'simular':   this.simular(goal);   break;
+    case 'editar':    this.editarMeta(goal); break;
+    case 'pausar':    this.actualizarEstado(goal.id, 'paused');    break;
+    case 'reactivar': this.actualizarEstado(goal.id, 'active');    break;
+    case 'cancelar':  this.actualizarEstado(goal.id, 'cancelled'); break;
   }
-
+}
   actualizarEstado(id: number, state: string) {
     this.http.patch(`${this.apiUrl}/goals/${id}/`, { state }).subscribe({
       next: () => this.cargarDatos(),

@@ -1,0 +1,223 @@
+// ── Content ───────────────────────────────────────────────────────────
+
+.actions-content {
+  --background: linear-gradient(
+    180deg,
+    #5FDD9D 0%,
+    #84EEA3 60%,
+    #AAFFA9 100%
+  );
+}
+
+.actions-wrapper {
+  padding: 0 18px 40px;
+}
+
+// ── Handle ────────────────────────────────────────────────────────────
+
+.handle {
+  width: 40px;
+  height: 4px;
+  background: rgba(63, 69, 49, 0.3);
+  border-radius: 2px;
+  margin: 12px auto 16px;
+}
+
+// ── Resumen ───────────────────────────────────────────────────────────
+
+.goal-summary {
+  background: #3F4531;
+  border-radius: 24px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+}
+
+.goal-summary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.goal-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(145, 249, 229, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ion-icon {
+    font-size: 22px;
+    color: #91F9E5;
+  }
+}
+
+.close-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(255,255,255,0.1);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ion-icon {
+    font-size: 18px;
+    color: rgba(255,255,255,0.6);
+  }
+}
+
+.goal-summary-name {
+  margin: 0 0 16px;
+  font-size: 20px;
+  font-weight: 800;
+  color: #91F9E5;
+}
+
+// ── Anillo progreso ───────────────────────────────────────────────────
+
+.goal-progress-ring-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.goal-progress-ring {
+  position: relative;
+  width: 100px;
+  height: 100px;
+
+  svg {
+    transform: rotate(-90deg);
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.ring-bg {
+  fill: none;
+  stroke: rgba(255,255,255,0.1);
+  stroke-width: 10;
+}
+
+.ring-fill {
+  fill: none;
+  stroke: #76F7BF;
+  stroke-width: 10;
+  stroke-linecap: round;
+  stroke-dasharray: 251;
+  transition: stroke-dashoffset 0.6s ease;
+}
+
+.ring-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ring-pct {
+  font-size: 20px;
+  font-weight: 900;
+  color: #91F9E5;
+}
+
+// ── Montos ────────────────────────────────────────────────────────────
+
+.goal-amounts-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.goal-amount-block {
+  flex: 1;
+  text-align: center;
+}
+
+.goal-amounts-divider {
+  width: 1px;
+  height: 32px;
+  background: rgba(255,255,255,0.1);
+}
+
+.goal-amount-label {
+  margin: 0 0 2px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(145, 249, 229, 0.5);
+}
+
+.goal-amount-value {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 800;
+  color: rgba(255,255,255,0.8);
+
+  &.green { color: #76F7BF; }
+  &.mint  { color: #91F9E5; }
+}
+
+.goal-uf-hint {
+  margin: 0;
+  text-align: center;
+  font-size: 11px;
+  color: rgba(145,249,229,0.4);
+}
+
+// ── Grid acciones ─────────────────────────────────────────────────────
+
+.actions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.action-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 12px;
+  border-radius: 18px;
+  border: none;
+  background: rgba(255,255,255,0.92);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  cursor: pointer;
+  transition: transform 0.15s;
+
+  &:active { transform: scale(0.95); }
+}
+
+.action-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ion-icon { font-size: 24px; }
+
+  &.green  { background: #e8faf0; ion-icon { color: #499167; } }
+  &.blue   { background: #e8f0fe; ion-icon { color: #3a5bd9; } }
+  &.yellow { background: #fff8e1; ion-icon { color: #f59e0b; } }
+  &.orange { background: #fff3cd; ion-icon { color: #856404; } }
+  &.red    { background: #ffeaea; ion-icon { color: #d9534f; } }
+}
+
+.action-label {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: #3F4531;
+}

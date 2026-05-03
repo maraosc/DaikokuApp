@@ -1,0 +1,115 @@
+<ion-content class="actions-content">
+  <div class="actions-wrapper">
+
+    <!-- Handle -->
+    <div class="handle"></div>
+
+    <!-- Resumen -->
+    <div class="goal-summary">
+
+      <div class="goal-summary-header">
+        <div class="goal-avatar">
+          <ion-icon name="trophy-outline"></ion-icon>
+        </div>
+        <button class="close-btn" (click)="cancelar()">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <h2 class="goal-summary-name">{{ goal?.name }}</h2>
+
+      <!-- Progreso circular visual -->
+      <div class="goal-progress-ring-wrapper">
+        <div class="goal-progress-ring">
+          <svg viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="40" class="ring-bg"/>
+            <circle
+              cx="50" cy="50" r="40"
+              class="ring-fill"
+              [style.stroke-dashoffset]="251 - (251 * (goal?.progress_percentage / 100))">
+            </circle>
+          </svg>
+          <div class="ring-center">
+            <span class="ring-pct">{{ goal?.progress_percentage | number:'1.0-0' }}%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="goal-amounts-row">
+        <div class="goal-amount-block">
+          <p class="goal-amount-label">Ahorrado</p>
+          <p class="goal-amount-value green">$ {{ goal?.current_amount | number:'1.0-0':'es-CL' }}</p>
+        </div>
+        <div class="goal-amounts-divider"></div>
+        <div class="goal-amount-block">
+          <p class="goal-amount-label">Objetivo</p>
+          <p class="goal-amount-value">$ {{ goal?.target_amount | number:'1.0-0':'es-CL' }}</p>
+        </div>
+        <div class="goal-amounts-divider"></div>
+        <div class="goal-amount-block">
+          <p class="goal-amount-label">Faltan</p>
+          <p class="goal-amount-value mint">$ {{ goal?.remaining_amount | number:'1.0-0':'es-CL' }}</p>
+        </div>
+      </div>
+
+      @if(ufValue > 0) {
+        <p class="goal-uf-hint">{{ enUF }} UF restantes</p>
+      }
+
+    </div>
+
+    <!-- Acciones -->
+    <div class="actions-grid">
+
+      <button class="action-card" (click)="accion('aportar')">
+        <div class="action-icon green">
+          <ion-icon name="add-circle-outline"></ion-icon>
+        </div>
+        <p class="action-label">Aportar</p>
+      </button>
+
+      <button class="action-card" (click)="accion('simular')">
+        <div class="action-icon blue">
+          <ion-icon name="calculator-outline"></ion-icon>
+        </div>
+        <p class="action-label">Simular</p>
+      </button>
+
+      <button class="action-card" (click)="accion('editar')">
+        <div class="action-icon yellow">
+          <ion-icon name="create-outline"></ion-icon>
+        </div>
+        <p class="action-label">Editar</p>
+      </button>
+
+      @if(goal?.state === 'active') {
+        <button class="action-card" (click)="accion('pausar')">
+          <div class="action-icon orange">
+            <ion-icon name="pause-outline"></ion-icon>
+          </div>
+          <p class="action-label">Pausar</p>
+        </button>
+      }
+
+      @if(goal?.state === 'paused') {
+        <button class="action-card" (click)="accion('reactivar')">
+          <div class="action-icon green">
+            <ion-icon name="play-outline"></ion-icon>
+          </div>
+          <p class="action-label">Reactivar</p>
+        </button>
+      }
+
+      @if(goal?.state !== 'cancelled') {
+        <button class="action-card" (click)="accion('cancelar')">
+          <div class="action-icon red">
+            <ion-icon name="trash-outline"></ion-icon>
+          </div>
+          <p class="action-label">Cancelar meta</p>
+        </button>
+      }
+
+    </div>
+
+  </div>
+</ion-content>
