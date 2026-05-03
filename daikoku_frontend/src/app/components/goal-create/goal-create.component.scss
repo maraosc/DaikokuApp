@@ -1,0 +1,408 @@
+.create-content {
+  --background: linear-gradient(
+    180deg,
+    #5FDD9D 0%,
+    #84EEA3 50%,
+    #AAFFA9 100%
+  );
+}
+
+.create-wrapper {
+  padding: 16px 20px 40px;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+// ── Header ────────────────────────────────────────────────────────────
+
+.create-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.header-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(63,69,49,0.15);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ion-icon { font-size: 18px; color: #3F4531; }
+}
+
+.steps-indicator {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.step-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(63,69,49,0.2);
+  transition: all 0.3s;
+
+  &.active {
+    width: 24px;
+    background: #3F4531;
+  }
+
+  &.done {
+    background: #499167;
+  }
+}
+
+// ── Paso wrapper ──────────────────────────────────────────────────────
+
+.paso-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.paso-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  background: #3F4531;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+
+  ion-icon {
+    font-size: 30px;
+    color: #91F9E5;
+  }
+}
+
+.paso-title {
+  margin: 0 0 8px;
+  font-size: 24px;
+  font-weight: 900;
+  color: #3F4531;
+}
+
+.paso-subtitle {
+  margin: 0 0 24px;
+  font-size: 14px;
+  color: rgba(63,69,49,0.6);
+}
+
+// ── Input nombre ──────────────────────────────────────────────────────
+
+.input-card {
+  background: rgba(255,255,255,0.92);
+  border-radius: 18px;
+  padding: 18px 20px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+  margin-bottom: 12px;
+}
+
+.main-input {
+  width: 100%;
+  font-size: 18px;
+  font-weight: 600;
+  color: #3F4531;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: inherit;
+  box-sizing: border-box;
+
+  &::placeholder { color: #ccc; }
+}
+
+.input-error {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: #d9534f;
+  font-weight: 600;
+}
+
+// ── Moneda ────────────────────────────────────────────────────────────
+
+.currency-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.currency-btn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(255,255,255,0.92);
+  border-radius: 18px;
+  padding: 16px 18px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  transition: all 0.2s;
+
+  &.selected {
+    border-color: #3F4531;
+    background: white;
+  }
+
+  &:active { transform: scale(0.98); }
+}
+
+.currency-symbol {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #e8faf0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 900;
+  color: #499167;
+  flex-shrink: 0;
+
+  &.uf {
+    font-size: 14px;
+    background: #e8f0fe;
+    color: #3a5bd9;
+  }
+}
+
+.currency-info {
+  flex: 1;
+  text-align: left;
+}
+
+.currency-name {
+  margin: 0 0 2px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #3F4531;
+}
+
+.currency-desc {
+  margin: 0;
+  font-size: 12px;
+  color: #777;
+}
+
+.currency-check {
+  font-size: 20px;
+  color: #3F4531;
+}
+
+// ── Monto ─────────────────────────────────────────────────────────────
+
+.amount-card {
+  background: rgba(255,255,255,0.92);
+  border-radius: 20px;
+  padding: 24px 20px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+  margin-bottom: 12px;
+}
+
+.amount-input-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.amount-prefix {
+  font-size: 28px;
+  font-weight: 900;
+  color: #3F4531;
+  min-width: 40px;
+}
+
+.amount-big-input {
+  flex: 1;
+  font-size: 40px;
+  font-weight: 900;
+  color: #3F4531;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: inherit;
+  width: 100%;
+
+  &::placeholder { color: #ddd; }
+}
+
+.amount-conversion {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #f0f0f0;
+
+  p {
+    margin: 0;
+    font-size: 13px;
+    color: #777;
+    font-weight: 600;
+  }
+}
+
+// ── Resumen ───────────────────────────────────────────────────────────
+
+.summary-card {
+  background: #3F4531;
+  border-radius: 18px;
+  padding: 18px 20px;
+  margin-bottom: 14px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.summary-card-label {
+  margin: 0 0 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(145,249,229,0.6);
+}
+
+.summary-card-name {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #91F9E5;
+}
+
+.summary-card-amount {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 900;
+  color: #76F7BF;
+}
+
+.summary-card-uf {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: rgba(145,249,229,0.5);
+}
+
+// ── Fecha ─────────────────────────────────────────────────────────────
+
+.date-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255,255,255,0.92);
+  border-radius: 16px;
+  padding: 16px 18px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.date-icon {
+  font-size: 22px;
+  color: #499167;
+  flex-shrink: 0;
+}
+
+.date-input {
+  flex: 1;
+  font-size: 16px;
+  font-weight: 600;
+  color: #3F4531;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: inherit;
+}
+
+// ── Botones ───────────────────────────────────────────────────────────
+
+.next-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 16px;
+  border-radius: 16px;
+  border: none;
+  background: #3F4531;
+  color: #91F9E5;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: auto;
+  transition: opacity 0.2s;
+
+  ion-icon { font-size: 20px; }
+  &:active { opacity: 0.85; }
+}
+
+.skip-btn {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  border-radius: 16px;
+  border: none;
+  background: transparent;
+  color: rgba(63,69,49,0.6);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.field-group {
+  background: rgba(255,255,255,0.92);
+  border-radius: 16px;
+  padding: 14px 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  margin-bottom: 14px;
+}
+
+.field-label {
+  margin: 0 0 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #499167;
+}
+
+.field-optional {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  color: #aaa;
+  font-size: 11px;
+}
+
+.field-icon {
+  color: #5FDD9D;
+  font-size: 20px;
+}
+
+.date-display {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+  cursor: pointer;
+  color: #3F4531;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.custom-datetime {
+  --background: transparent;
+  --title-color: #3F4531;
+  --wheel-highlight-background: rgba(95, 221, 157, 0.2);
+  border-radius: 12px;
+  margin-top: 8px;
+}

@@ -17,6 +17,8 @@ import {
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { GoalActionsComponent } from '../../components/goal-actions/goal-actions.component';
+import { GoalCreateComponent } from '../../components/goal-create/goal-create.component';
+
 
 interface Goal {
   id: number;
@@ -91,27 +93,28 @@ export class SavingsPage implements OnInit {
 
   // ── Crear meta ────────────────────────────────────────────────────
 
-  async crearMeta() {
-    const alert = await this.alertCtrl.create({
-      header: 'Nueva meta de ahorro',
-      inputs: [
-        { name: 'name', type: 'text', placeholder: 'Ej: Pie departamento, Auto...' },
-      ],
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        {
-          text: 'Siguiente',
-          handler: (data) => {
-            if (!data.name?.trim()) return false;
-            this.elegirTipoMonto(data.name.trim());
-            return true;
-          }
-        }
-      ]
-    });
-    await alert.present();
-  }
+async crearMeta() {
+  const modal = await this.modalCtrl.create({
+    component: GoalCreateComponent,
+    componentProps: { ufValue: this.ufValue },
+    breakpoints: [0, 1],
+    initialBreakpoint: 1,
+  });
 
+  await modal.present();
+
+  const { data, role } = await modal.onWillDismiss();
+  if (role === 'confirm' && data) {
+    this.http.post(`${this.apiUrl}/goals/`, {
+      name:          data.name,
+      target_amount: data.target_amount,
+      deadline:      data.deadline,
+    }).subscribe({
+      next: () => this.cargarDatos(),
+      error: () => {}
+    });
+  }
+}
   async elegirTipoMonto(name: string) {
     const alert = await this.alertCtrl.create({
       header: '¿En qué moneda?',

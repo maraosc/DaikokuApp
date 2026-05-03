@@ -1,0 +1,195 @@
+<ion-content class="create-content">
+  <div class="create-wrapper">
+
+    <!-- Header -->
+    <div class="create-header">
+      <button class="header-btn" (click)="paso > 1 ? paso = paso - 1 : cancelar()">
+        <ion-icon [name]="paso > 1 ? 'arrow-back-outline' : 'close-outline'"></ion-icon>
+      </button>
+      <div class="steps-indicator">
+        @for(s of [1,2,3,4]; track s) {
+          <div class="step-dot" [class.active]="s === paso" [class.done]="s < paso"></div>
+        }
+      </div>
+      <div style="width: 36px;"></div>
+    </div>
+
+    <!-- PASO 1: Nombre -->
+    @if(paso === 1) {
+      <div class="paso-wrapper">
+        <div class="paso-icon">
+          <ion-icon name="trophy-outline"></ion-icon>
+        </div>
+        <h2 class="paso-title">¿Cuál es tu meta?</h2>
+        <p class="paso-subtitle">Dale un nombre a lo que quieres lograr</p>
+
+        <div class="input-card">
+          <input
+            type="text"
+            [(ngModel)]="nombre"
+            (input)="error = ''"
+            placeholder="Ej: Pie departamento, Auto, Viaje..."
+            class="main-input"
+            autofocus>
+        </div>
+
+        @if(error) {
+          <p class="input-error">{{ error }}</p>
+        }
+
+        <button class="next-btn" (click)="siguiente()">
+          Siguiente
+          <ion-icon name="arrow-forward-outline"></ion-icon>
+        </button>
+      </div>
+    }
+
+    <!-- PASO 2: Moneda -->
+    @if(paso === 2) {
+      <div class="paso-wrapper">
+        <div class="paso-icon">
+          <ion-icon name="cash-outline"></ion-icon>
+        </div>
+        <h2 class="paso-title">¿En qué moneda?</h2>
+        <p class="paso-subtitle">Puedes ingresar el monto en pesos o en UF</p>
+
+        <div class="currency-options">
+          <button
+            class="currency-btn"
+            [class.selected]="tipo === 'clp'"
+            (click)="tipo = 'clp'">
+            <div class="currency-symbol">$</div>
+            <div class="currency-info">
+              <p class="currency-name">Pesos chilenos</p>
+              <p class="currency-desc">CLP</p>
+            </div>
+            @if(tipo === 'clp') {
+              <ion-icon name="checkmark-outline" class="currency-check"></ion-icon>
+            }
+          </button>
+
+          <button
+            class="currency-btn"
+            [class.selected]="tipo === 'uf'"
+            (click)="tipo = 'uf'">
+            <div class="currency-symbol uf">UF</div>
+            <div class="currency-info">
+              <p class="currency-name">Unidad de Fomento</p>
+              <p class="currency-desc">1 UF = $ {{ ufValue | number:'1.0-0':'es-CL' }}</p>
+            </div>
+            @if(tipo === 'uf') {
+              <ion-icon name="checkmark-outline" class="currency-check"></ion-icon>
+            }
+          </button>
+        </div>
+
+        <button class="next-btn" (click)="siguiente()">
+          Siguiente
+          <ion-icon name="arrow-forward-outline"></ion-icon>
+        </button>
+      </div>
+    }
+
+    <!-- PASO 3: Monto -->
+    @if(paso === 3) {
+      <div class="paso-wrapper">
+        <div class="paso-icon">
+          <ion-icon name="cash-outline"></ion-icon>
+        </div>
+        <h2 class="paso-title">¿Cuánto necesitas?</h2>
+        <p class="paso-subtitle">
+          @if(tipo === 'uf') {
+            Ingresa el monto en UF
+          } @else {
+            Ingresa el monto en pesos
+          }
+        </p>
+
+        <div class="amount-card">
+          <div class="amount-input-row">
+            <span class="amount-prefix">{{ tipo === 'uf' ? 'UF' : '$' }}</span>
+            <input
+              type="text"
+              inputmode="numeric"
+              [value]="montoDisplay"
+              (input)="onMontoChange($any($event.target).value)"
+              placeholder="0"
+              class="amount-big-input">
+          </div>
+
+          @if(monto && monto > 0) {
+            <div class="amount-conversion">
+              @if(tipo === 'uf') {
+                <p>≈ $ {{ montoEnPesos | number:'1.0-0':'es-CL' }} pesos</p>
+              } @else {
+                <p>≈ {{ montoEnUF }} UF</p>
+              }
+            </div>
+          }
+        </div>
+
+        @if(error) {
+          <p class="input-error">{{ error }}</p>
+        }
+
+        <button class="next-btn" (click)="siguiente()">
+          Siguiente
+          <ion-icon name="arrow-forward-outline"></ion-icon>
+        </button>
+      </div>
+    }
+
+    <!-- PASO 4: Fecha -->
+    @if(paso === 4) {
+      <div class="paso-wrapper">
+        <div class="paso-icon">
+          <ion-icon name="calendar-outline"></ion-icon>
+        </div>
+        <h2 class="paso-title">¿Cuándo quieres lograrlo?</h2>
+        <p class="paso-subtitle">Agrega una fecha límite para mantenerte motivado</p>
+
+        <div class="summary-card">
+          <p class="summary-card-label">Tu meta</p>
+          <p class="summary-card-name">{{ nombre }}</p>
+          <p class="summary-card-amount">$ {{ montoEnPesos | number:'1.0-0':'es-CL' }}</p>
+          @if(tipo === 'uf') {
+            <p class="summary-card-uf">{{ montoDisplay }} UF</p>
+          }
+        </div>
+
+        <div class="field-group">
+          <p class="field-label">Fecha límite <span class="field-optional">(opcional)</span></p>
+          <div class="date-display" (click)="mostrarFecha = !mostrarFecha">
+            <ion-icon name="calendar-outline" class="field-icon"></ion-icon>
+            <span>{{ deadline ? formatDate(deadline) : 'Seleccionar fecha' }}</span>
+            <ion-icon name="chevron-down-outline" style="margin-left: auto; color: #499167;"></ion-icon>
+          </div>
+          @if(mostrarFecha) {
+            <ion-datetime
+              [(ngModel)]="deadline"
+              presentation="date"
+              locale="es-CL"
+              [preferWheel]="false"
+              (ionChange)="mostrarFecha = false"
+              class="custom-datetime">
+            </ion-datetime>
+          }
+        </div>
+
+        <button class="next-btn" (click)="guardar()">
+          @if(saving) {
+            <ion-spinner name="crescent" style="width:20px;height:20px;color:#91F9E5;"></ion-spinner>
+          } @else {
+            <ion-icon name="trophy-outline"></ion-icon>
+            Crear meta
+          }
+        </button>
+
+        <button class="skip-btn" (click)="omitirFecha()">
+          Crear sin fecha límite
+        </button>
+      </div>
+    }
+
+  </div>
+</ion-content>
