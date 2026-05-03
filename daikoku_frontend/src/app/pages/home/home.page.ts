@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DecimalPipe } from '@angular/common';
 import {
@@ -10,7 +10,11 @@ import {
   ModalController, AlertController, MenuController
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { addOutline, pencilOutline, trashOutline, homeOutline, trendingUpOutline, personOutline, walletOutline, trophyOutline } from 'ionicons/icons';
+import {
+  addOutline, pencilOutline, trashOutline, homeOutline,
+  trendingUpOutline, personOutline, walletOutline, trophyOutline,
+  chevronBackOutline, chevronForwardOutline
+} from 'ionicons/icons';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
@@ -25,6 +29,7 @@ interface Transaction {
   date: string;
   category: number | null;
   category_name: string | null;
+  goal: number | null;
 }
 
 @Component({
@@ -40,13 +45,21 @@ interface Transaction {
     IonMenu, IonMenuButton,
   ],
 })
-export class HomePage implements OnInit {
+export class HomePage implements OnInit, AfterViewInit {
 
-  balance     = 0;
-  vistaActual = 'gastos';
+  @ViewChild('carousel') carouselRef!: ElementRef;
+
+  balance             = 0;
+  totalIngresos       = 0;
+  totalGastos         = 0;
+  presupuestoUsadoPct = 0;
+  vistaActual         = 'gastos';
   transactions: Transaction[] = [];
-  dolar = 0;
-  uf    = 0;
+  goals: any[]        = [];
+  totalAhorros        = 0;
+  dolar               = 0;
+  uf                  = 0;
+  cardActual          = 0;
 
   private apiUrl = environment.apiUrl;
 
@@ -57,7 +70,11 @@ export class HomePage implements OnInit {
     private router: Router,
     private http: HttpClient
   ) {
-    addIcons({ addOutline, pencilOutline, trashOutline, homeOutline, trendingUpOutline, personOutline, walletOutline,trophyOutline });
+    addIcons({
+      addOutline, pencilOutline, trashOutline, homeOutline,
+      trendingUpOutline, personOutline, walletOutline, trophyOutline,
+      chevronBackOutline, chevronForwardOutline
+    });
   }
 
   ngOnInit() {
@@ -65,9 +82,34 @@ export class HomePage implements OnInit {
     this.cargarIndicadores();
   }
 
+  ngAfterViewInit() {
+    const el = this.carouselRef?.nativeElement;
+    if (el) {
+      el.addEventListener('scroll', () => {
+        const index = Math.round(el.scrollLeft / (el.offsetWidth + 14));
+        this.cardActual = index;
+      });
+    }
+  }
+
+  irATarjeta(index: number) {
+    this.cardActual = index;
+    const el = this.carouselRef?.nativeElement;
+    if (el) {
+      const cardWidth = el.offsetWidth + 14;
+      el.scrollTo({ left: index * cardWidth, behavior: 'smooth' });
+    }
+  }
+
   get transactionsFiltradas(): Transaction[] {
     const tipo = this.vistaActual === 'gastos' ? 'expense' : 'income';
     return this.transactions.filter(t => t.type === tipo);
+  }
+
+  formatDate(date: string): string {
+    if (!date) return '';
+    const [year, month, day] = date.split('-');
+    return `${day}-${month}-${year}`;
   }
 
   cargarDatos() {
@@ -76,13 +118,25 @@ export class HomePage implements OnInit {
 
     this.http.get<any>(`${this.apiUrl}/transactions/summary/?month=${month}`).subscribe({
       next: data => {
-        this.balance = data.total_income - data.total_expenses;
+        this.totalIngresos       = data.total_income;
+        this.totalGastos         = data.total_expenses;
+        this.balance             = data.total_income - data.total_expenses;
+        this.presupuestoUsadoPct = data.budget_used_pct;
       }
     });
 
     this.http.get<Transaction[]>(`${this.apiUrl}/transactions/?month=${month}`).subscribe({
       next: data => {
-        this.transactions = data;
+        this.transactions = data.sort((a, b) =>
+          new Date(b.date).getTime() - new Date(a.date).getTime()
+        );
+      }
+    });
+
+    this.http.get<any[]>(`${this.apiUrl}/goals/?state=active`).subscribe({
+      next: data => {
+        this.goals        = data;
+        this.totalAhorros = data.reduce((s, g) => s + Number(g.current_amount), 0);
       }
     });
   }
@@ -164,6 +218,11 @@ export class HomePage implements OnInit {
           text: 'Eliminar',
           role: 'destructive',
           handler: () => {
+            if (tx.goal) {
+              this.http.post(`${this.apiUrl}/goals/${tx.goal}/contribute/`, {
+                amount: -tx.amount
+              }).subscribe();
+            }
             this.http.delete(`${this.apiUrl}/transactions/${tx.id}/`).subscribe({
               next: () => this.cargarDatos(),
               error: () => {}

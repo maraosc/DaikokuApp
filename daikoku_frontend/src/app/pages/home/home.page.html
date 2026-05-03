@@ -1,92 +1,123 @@
 <ion-menu contentId="main-content" class="app-menu">
-
   <ion-header>
     <ion-toolbar>
       <ion-title>Menú</ion-title>
     </ion-toolbar>
   </ion-header>
-
   <ion-content>
-
     <ion-list class="menu-list">
-
       <ion-item button (click)="navegarA('/home')" lines="none">
         <ion-icon name="home-outline" slot="start"></ion-icon>
         <ion-label>Inicio</ion-label>
       </ion-item>
-
       <ion-item button (click)="navegarA('/budgets')" lines="none">
         <ion-icon name="wallet-outline" slot="start"></ion-icon>
         <ion-label>Presupuestos</ion-label>
       </ion-item>
-
       <ion-item button (click)="navegarA('/savings')" lines="none">
-        <ion-icon name="trending-up-outline" slot="start"></ion-icon>
+        <ion-icon name="trophy-outline" slot="start"></ion-icon>
         <ion-label>Ahorros</ion-label>
       </ion-item>
-
       <ion-item button (click)="navegarA('/perfil')" lines="none">
         <ion-icon name="person-outline" slot="start"></ion-icon>
         <ion-label>Perfil</ion-label>
       </ion-item>
-
     </ion-list>
 
     <div class="menu-indicators">
-
-      <p class="menu-indicators-title">
-        Indicadores
-      </p>
-
+      <p class="menu-indicators-title">Indicadores</p>
       <div class="indicator-card">
         <p class="indicator-label">Dólar</p>
-        <p class="indicator-value">
-          $ {{ dolar | number:'1.0-0':'es-CL' }}
-        </p>
+        <p class="indicator-value">$ {{ dolar | number:'1.0-0':'es-CL' }}</p>
       </div>
-
       <div class="indicator-card">
         <p class="indicator-label">UF</p>
-        <p class="indicator-value">
-          $ {{ uf | number:'1.0-0':'es-CL' }}
-        </p>
+        <p class="indicator-value">$ {{ uf | number:'1.0-0':'es-CL' }}</p>
       </div>
-
     </div>
-
   </ion-content>
-
 </ion-menu>
-
 
 <div class="ion-page" id="main-content">
 
-  <ion-header translucent="true">
+  <ion-header [translucent]="true">
     <ion-toolbar>
-
       <ion-buttons slot="start">
         <ion-menu-button></ion-menu-button>
       </ion-buttons>
-
       <ion-title>Mis finanzas</ion-title>
-
     </ion-toolbar>
   </ion-header>
 
+  <ion-content [fullscreen]="true" class="home-content">
 
-  <ion-content fullscreen="true" class="home-content">
+    <!-- Carrusel wrapper -->
+    <div class="cards-carousel-wrapper">
+
+      <div class="cards-carousel" #carousel>
+
+        <!-- Tarjeta 1: Balance -->
+        <div class="carousel-card balance">
+          <p class="carousel-label">BALANCE</p>
+          <h1 class="carousel-value">$ {{ balance | number:'1.0-0':'es-CL' }}</h1>
+          <div class="carousel-row">
+            <div class="carousel-stat">
+              <p class="carousel-stat-label">Ingresos</p>
+              <p class="carousel-stat-value green">$ {{ totalIngresos | number:'1.0-0':'es-CL' }}</p>
+            </div>
+            <div class="carousel-stat-divider"></div>
+            <div class="carousel-stat">
+              <p class="carousel-stat-label">Gastos</p>
+              <p class="carousel-stat-value red">$ {{ totalGastos | number:'1.0-0':'es-CL' }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tarjeta 2: Metas -->
+        <div class="carousel-card savings">
+          <div class="carousel-card-header">
+            <p class="carousel-label-dark">METAS DE AHORRO</p>
+            <ion-icon name="trophy-outline" class="carousel-header-icon"></ion-icon>
+          </div>
+          <h1 class="carousel-value mint">$ {{ totalAhorros | number:'1.0-0':'es-CL' }}</h1>
+          <p class="carousel-sublabel">
+            {{ goals.length }} meta{{ goals.length !== 1 ? 's' : '' }} activa{{ goals.length !== 1 ? 's' : '' }}
+          </p>
+          @if(goals.length > 0) {
+            <div class="carousel-goals-mini">
+              @for(goal of goals.slice(0, 2); track goal.id) {
+                <div class="mini-goal">
+                  <span class="mini-goal-name">{{ goal.name }}</span>
+                  <span class="mini-goal-pct">{{ goal.progress_percentage | number:'1.0-0' }}%</span>
+                </div>
+                <div class="mini-goal-bar">
+                  <div class="mini-goal-fill" [style.width.%]="goal.progress_percentage"></div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+      </div>
+
+      <!-- Dots -->
+      <div class="carousel-dots">
+        <div class="dot" [class.active]="cardActual === 0" (click)="irATarjeta(0)"></div>
+        <div class="dot" [class.active]="cardActual === 1" (click)="irATarjeta(1)"></div>
+      </div>
+
+      <!-- Flechas -->
+      <button class="carousel-arrow left" (click)="irATarjeta(0)" [class.hidden]="cardActual === 0">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </button>
+      <button class="carousel-arrow right" (click)="irATarjeta(1)" [class.hidden]="cardActual === 1">
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </button>
+
+    </div>
 
     <div class="home-wrapper">
 
-      <!-- Balance -->
-      <section class="balance-card">
-        <p class="balance-label">BALANCE</p>
-        <h1 class="balance-amount">
-          $ {{ balance | number:'1.0-0':'es-CL' }}
-        </h1>
-      </section>
-
-      <!-- Selector -->
       <ion-segment [(ngModel)]="vistaActual" class="transactions-segment">
         <ion-segment-button value="gastos">
           <ion-label>Gastos</ion-label>
@@ -96,22 +127,14 @@
         </ion-segment-button>
       </ion-segment>
 
-      <!-- Transacciones -->
       <ion-list class="transactions-list">
-
         @for(tx of transactionsFiltradas; track tx.id) {
-          <ion-item
-            button
-            detail="false"
-            class="transaction-item"
-            (click)="abrirDetalle(tx)">
-
+          <ion-item button detail="false" class="transaction-item" (click)="abrirDetalle(tx)">
             <ion-label>
               <h3>{{ tx.category_name ?? 'Sin categoría' }}</h3>
               <p class="transaction-description">{{ tx.description }}</p>
-              <p class="transaction-date">{{ tx.date }}</p>
+              <p class="transaction-date">{{ formatDate(tx.date) }}</p>
             </ion-label>
-
             <ion-note
               slot="end"
               class="transaction-amount"
@@ -120,7 +143,6 @@
               {{ tx.type === 'income' ? '+' : '-' }}$
               {{ tx.amount | number:'1.0-0':'es-CL' }}
             </ion-note>
-
           </ion-item>
         }
 
@@ -129,12 +151,10 @@
             <ion-label>No hay transacciones este mes</ion-label>
           </ion-item>
         }
-
       </ion-list>
 
     </div>
 
-    <!-- FAB -->
     <ion-fab vertical="bottom" horizontal="end" slot="fixed">
       <ion-fab-button class="add-transaction-button" (click)="abrirModal()">
         <ion-icon name="add-outline"></ion-icon>
