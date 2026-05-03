@@ -1,0 +1,145 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Estadísticas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="stats-content">
+  <div class="stats-wrapper">
+
+    <!-- Filtros -->
+<div class="filter-group date-filter" id="date-filter-trigger">
+  <ion-icon name="calendar-outline" class="filter-icon"></ion-icon>
+
+  <div class="date-filter-text">
+    <span class="date-filter-label">Mes</span>
+    <span class="date-filter-value">{{ selectedMonthLabel }}</span>
+  </div>
+
+  <ion-icon name="chevron-down-outline" class="date-filter-arrow"></ion-icon>
+</div>
+
+<ion-popover trigger="date-filter-trigger" triggerAction="click" class="date-popover">
+  <ng-template>
+    <ion-datetime
+      presentation="month-year"
+      locale="es-CL"
+      [value]="selectedMonth + '-01'"
+      [showDefaultButtons]="true"
+      doneText="Aplicar"
+      cancelText="Cancelar"
+      (ionChange)="onDateChange($event)">
+    </ion-datetime>
+  </ng-template>
+</ion-popover>
+
+    <!-- Resumen -->
+    <div class="summary-row">
+      <div class="summary-item">
+        <ion-icon name="arrow-up-outline" class="summary-icon expense"></ion-icon>
+        <div>
+          <p class="summary-label">Gastos</p>
+          <p class="summary-value expense">$ {{ totalGastos | number:'1.0-0':'es-CL' }}</p>
+        </div>
+      </div>
+      <div class="summary-divider"></div>
+      <div class="summary-item">
+        <ion-icon name="arrow-down-outline" class="summary-icon income"></ion-icon>
+        <div>
+          <p class="summary-label">Ingresos</p>
+          <p class="summary-value income">$ {{ totalIngresos | number:'1.0-0':'es-CL' }}</p>
+        </div>
+      </div>
+      <div class="summary-divider"></div>
+      <div class="summary-item">
+        <ion-icon name="trending-up-outline" class="summary-icon balance"></ion-icon>
+        <div>
+          <p class="summary-label">Balance</p>
+          <p class="summary-value balance" [class.negative]="balance < 0">
+            $ {{ balance | number:'1.0-0':'es-CL' }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    @if(loading) {
+      <div class="loading-state">
+        <ion-spinner name="crescent"></ion-spinner>
+      </div>
+    } @else if(categoryStats.length === 0) {
+      <div class="empty-state">
+        <ion-icon name="bar-chart-outline" class="empty-icon"></ion-icon>
+        <p>No hay datos para este período</p>
+      </div>
+    } @else {
+
+      <!-- Dona -->
+      <div class="chart-card">
+        <p class="chart-title">Por categoría</p>
+        <div class="donut-wrapper">
+          <canvas #donutChart></canvas>
+          <div class="donut-center">
+            <p class="donut-total">$ {{ totalCategorias | number:'1.0-0':'es-CL' }}</p>
+            <p class="donut-label">{{ vistaActual === 'gastos' ? 'total gastado' : 'total ingresado' }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lista categorías -->
+      <div class="chart-card">
+        <p class="chart-title">Detalle</p>
+        @for(cat of categoryStats; track cat.category_name; let i = $index) {
+          <div class="cat-row">
+            <div class="cat-color" [style.background]="COLORS[i % COLORS.length]"></div>
+            <div class="cat-info">
+              <p class="cat-name">{{ cat.category_name }}</p>
+              <div class="cat-bar-wrapper">
+                <div class="cat-bar"
+                  [style.width.%]="cat.percentage"
+                  [style.background]="COLORS[i % COLORS.length]">
+                </div>
+              </div>
+            </div>
+            <div class="cat-amounts">
+              <p class="cat-total">$ {{ cat.total | number:'1.0-0':'es-CL' }}</p>
+              <p class="cat-pct">{{ cat.percentage | number:'1.0-0' }}%</p>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Barras por período -->
+      <div class="chart-card">
+        <div class="chart-title-row">
+          <p class="chart-title">Tendencia</p>
+          <div class="periodo-selector">
+            <button
+              class="periodo-btn"
+              [class.active]="periodoBarras === 'dia'"
+              (click)="periodoBarras = 'dia'; onPeriodoChange()">
+              Día
+            </button>
+            <button
+              class="periodo-btn"
+              [class.active]="periodoBarras === 'semana'"
+              (click)="periodoBarras = 'semana'; onPeriodoChange()">
+              Semana
+            </button>
+            <button
+              class="periodo-btn"
+              [class.active]="periodoBarras === 'mes'"
+              (click)="periodoBarras = 'mes'; onPeriodoChange()">
+              Mes
+            </button>
+          </div>
+        </div>
+        <canvas #barChart></canvas>
+      </div>
+
+    }
+
+  </div>
+</ion-content>

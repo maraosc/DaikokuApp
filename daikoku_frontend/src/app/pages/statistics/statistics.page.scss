@@ -1,0 +1,519 @@
+ion-toolbar {
+  --background: transparent;
+  --color: white;
+}
+
+ion-back-button {
+  --color: white;
+}
+
+// ── Content ───────────────────────────────────────────────────────────
+
+.stats-content {
+  --background: linear-gradient(
+    180deg,
+    #5FDD9D 0%,
+    #84EEA3 45%,
+    #AAFFA9 100%
+  );
+}
+
+.stats-wrapper {
+  padding: 16px 18px 80px;
+}
+
+// ── Filtros ───────────────────────────────────────────────────────────
+
+.filters-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+  flex-wrap: nowrap;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  padding: 8px 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  flex: 1;
+  min-width: 0;
+}
+
+.filter-icon {
+  font-size: 16px;
+  color: #499167;
+  flex-shrink: 0;
+}
+
+.filter-select {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 600;
+  color: #3F4531;
+  font-family: inherit;
+  width: 100%;
+  cursor: pointer;
+}
+
+// ── Filtro Datepicker ─────────────────────────────────────────────────
+
+.date-filter {
+  min-height: 58px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.date-filter-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.date-filter-label {
+  font-size: 9px;
+  font-weight: 800;
+  color: #499167;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  line-height: 1;
+}
+
+.date-filter-value {
+  margin-top: 5px;
+  font-size: 15px;
+  font-weight: 800;
+  color: #3F4531;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.date-filter-arrow {
+  font-size: 18px;
+  color: #499167;
+  flex-shrink: 0;
+}
+
+.date-popover {
+  --width: 320px;
+  --border-radius: 22px;
+  --box-shadow: 0 16px 40px rgba(63, 69, 49, 0.22);
+  --background: #ffffff;
+}
+
+.date-popover::part(content) {
+  border-radius: 22px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.date-popover ion-datetime {
+  --background: #ffffff;
+  --background-rgb: 255, 255, 255;
+  --wheel-highlight-background: rgba(95, 221, 157, 0.18);
+  --wheel-fade-background-rgb: 255, 255, 255;
+
+  width: 100%;
+  color: #3F4531;
+  border-radius: 22px;
+}
+
+.date-popover ion-datetime::part(month-year-button) {
+  color: #3F4531;
+  font-weight: 800;
+}
+
+.date-popover ion-datetime::part(wheel-item) {
+  color: #777;
+  font-weight: 600;
+}
+
+.date-popover ion-datetime::part(wheel-item active) {
+  color: #3F4531;
+  font-weight: 900;
+}
+
+.date-popover ion-datetime::part(button) {
+  color: #499167;
+  font-weight: 800;
+}
+
+// ── Segmento Gastos / Ingresos ────────────────────────────────────────
+
+.type-segment {
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 12px;
+  height: 38px;
+  flex-shrink: 0;
+  min-width: 150px;
+}
+
+.type-segment ion-segment-button {
+  --background: transparent;
+  --background-checked: #76F7BF;
+  --indicator-color: transparent;
+  --border-radius: 10px;
+  --padding-top: 4px;
+  --padding-bottom: 4px;
+  min-height: 34px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.seg-text {
+  font-size: 13px;
+  font-weight: 700;
+  color: #499167;
+}
+
+.type-segment ion-segment-button.segment-button-checked .seg-text {
+  color: #3F4531;
+  font-weight: 800;
+}
+
+// ── Resumen ───────────────────────────────────────────────────────────
+
+.summary-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: center;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 20px;
+  padding: 18px 16px;
+  margin-top: 12px;
+  margin-bottom: 18px;
+  min-height: 82px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.summary-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.summary-divider {
+  display: none;
+}
+
+.summary-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+
+  &.expense {
+    color: #d9534f;
+  }
+
+  &.income {
+    color: #499167;
+  }
+
+  &.balance {
+    color: #3a5bd9;
+  }
+}
+
+.summary-label {
+  margin: 0 0 4px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  line-height: 1;
+}
+
+.summary-value {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 800;
+  color: #3F4531;
+  white-space: nowrap;
+  line-height: 1.1;
+
+  &.expense {
+    color: #d9534f;
+  }
+
+  &.income {
+    color: #499167;
+  }
+
+  &.balance {
+    color: #3a5bd9;
+  }
+
+  &.negative {
+    color: #d9534f;
+  }
+}
+
+// ── Loading / Empty ───────────────────────────────────────────────────
+
+.loading-state {
+  text-align: center;
+  padding: 40px;
+
+  ion-spinner {
+    color: #3F4531;
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 48px 16px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 20px;
+}
+
+.empty-icon {
+  font-size: 52px;
+  color: #499167;
+  display: block;
+  margin: 0 auto 12px;
+}
+
+.empty-state p {
+  margin: 0;
+  font-weight: 700;
+  color: #3F4531;
+}
+
+// ── Chart card ────────────────────────────────────────────────────────
+
+.chart-card {
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 20px;
+  padding: 18px;
+  margin-bottom: 14px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.chart-title {
+  margin: 0 0 14px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #499167;
+}
+
+.chart-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+
+  .chart-title {
+    margin: 0;
+  }
+}
+
+// ── Dona ──────────────────────────────────────────────────────────────
+
+.donut-wrapper {
+  position: relative;
+  max-width: 220px;
+  margin: 0 auto;
+}
+
+.donut-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.donut-total {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 900;
+  color: #3F4531;
+}
+
+.donut-label {
+  margin: 2px 0 0;
+  font-size: 10px;
+  color: #999;
+  font-weight: 600;
+}
+
+// ── Lista categorías ──────────────────────────────────────────────────
+
+.cat-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.cat-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.cat-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.cat-name {
+  margin: 0 0 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #3F4531;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cat-bar-wrapper {
+  height: 6px;
+  background: #f0f0f0;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.cat-bar {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.4s ease;
+  min-width: 4px;
+}
+
+.cat-amounts {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.cat-total {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 800;
+  color: #3F4531;
+}
+
+.cat-pct {
+  margin: 0;
+  font-size: 11px;
+  color: #999;
+}
+
+// ── Selector período ──────────────────────────────────────────────────
+
+.periodo-selector {
+  display: flex;
+  gap: 4px;
+  background: #f0f0f0;
+  border-radius: 10px;
+  padding: 3px;
+}
+
+.periodo-btn {
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #777;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+
+  &.active {
+    background: #3F4531;
+    color: #91F9E5;
+  }
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+// ── Responsive ────────────────────────────────────────────────────────
+
+@media (max-width: 390px) {
+  .stats-wrapper {
+    padding: 14px 12px 80px;
+  }
+
+  .filters-row {
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .filter-group {
+    padding: 8px 10px;
+  }
+
+  .date-filter {
+    min-height: 56px;
+    padding: 11px 14px;
+  }
+
+  .date-filter-value {
+    font-size: 14px;
+  }
+
+  .type-segment {
+    min-width: 135px;
+  }
+
+  .seg-text {
+    font-size: 12px;
+  }
+
+  .summary-row {
+    padding: 14px 10px;
+    min-height: 76px;
+    margin-top: 10px;
+  }
+
+  .summary-item {
+    gap: 6px;
+  }
+
+  .summary-icon {
+    font-size: 18px;
+  }
+
+  .summary-label {
+    font-size: 8px;
+    letter-spacing: 0.4px;
+  }
+
+  .summary-value {
+    font-size: 11px;
+  }
+
+  .periodo-btn {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+}

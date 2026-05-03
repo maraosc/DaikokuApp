@@ -13,7 +13,7 @@ import { addIcons } from 'ionicons';
 import {
   addOutline, pencilOutline, trashOutline, homeOutline,
   trendingUpOutline, personOutline, walletOutline, trophyOutline,
-  chevronBackOutline, chevronForwardOutline
+  chevronBackOutline, chevronForwardOutline,barChartOutline
 } from 'ionicons/icons';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -73,7 +73,7 @@ export class HomePage implements OnInit, AfterViewInit {
     addIcons({
       addOutline, pencilOutline, trashOutline, homeOutline,
       trendingUpOutline, personOutline, walletOutline, trophyOutline,
-      chevronBackOutline, chevronForwardOutline
+      chevronBackOutline, chevronForwardOutline,barChartOutline
     });
   }
 
