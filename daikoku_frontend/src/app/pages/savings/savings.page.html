@@ -1,0 +1,134 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Metas de ahorro</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="savings-content">
+
+  <div class="savings-wrapper">
+
+    @if(loading) {
+      <div class="loading-state">
+        <ion-spinner name="crescent"></ion-spinner>
+      </div>
+    }
+
+    <!-- UF actual -->
+    @if(ufValue > 0) {
+      <div class="uf-banner">
+        <ion-icon name="trending-up-outline"></ion-icon>
+        <span>UF hoy: <strong>$ {{ ufValue | number:'1.0-0':'es-CL' }}</strong></span>
+      </div>
+    }
+
+    <!-- Metas activas -->
+    @if(goalsActivas.length > 0) {
+      <p class="section-title">En progreso</p>
+
+      @for(goal of goalsActivas; track goal.id) {
+        <div class="goal-card" [class.paused]="goal.state === 'paused'">
+
+          <div class="goal-header">
+            <div class="goal-icon-wrapper">
+              <ion-icon name="trophy-outline" class="goal-icon"></ion-icon>
+            </div>
+            <div class="goal-info">
+              <h3 class="goal-name">{{ goal.name }}</h3>
+              @if(goal.state === 'paused') {
+                <span class="goal-badge paused">Pausada</span>
+              }
+              @if(goal.deadline) {
+                <p class="goal-deadline">
+                  <ion-icon name="time-outline"></ion-icon>
+                  {{ goal.deadline }}
+                </p>
+              }
+            </div>
+            <button class="goal-menu-btn" (click)="cambiarEstado(goal)">
+              <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+            </button>
+          </div>
+
+          <!-- Progreso -->
+          <div class="goal-progress-section">
+            <div class="goal-amounts">
+              <span class="goal-current">$ {{ goal.current_amount | number:'1.0-0':'es-CL' }}</span>
+              <span class="goal-target">/ $ {{ goal.target_amount | number:'1.0-0':'es-CL' }}</span>
+            </div>
+            <span class="goal-pct">{{ goal.progress_percentage | number:'1.0-0' }}%</span>
+          </div>
+
+          <ion-progress-bar
+            [value]="goal.progress_percentage / 100"
+            class="goal-progress-bar"
+            [color]="goal.progress_percentage >= 100 ? 'success' : 'primary'">
+          </ion-progress-bar>
+
+          <p class="goal-remaining">
+            Faltan <strong>$ {{ goal.remaining_amount | number:'1.0-0':'es-CL' }}</strong>
+            <span class="goal-uf">({{ enUF(goal.remaining_amount) }} UF)</span>
+          </p>
+
+          <!-- Acciones -->
+          <div class="goal-actions">
+            <button class="goal-action-btn contribute" (click)="aportar(goal)">
+              <ion-icon name="add-circle-outline"></ion-icon>
+              <span>Aportar</span>
+            </button>
+            <button class="goal-action-btn simulate" (click)="simular(goal)">
+              <ion-icon name="calculator-outline"></ion-icon>
+              <span>Simular</span>
+            </button>
+          </div>
+
+        </div>
+      }
+    }
+
+    <!-- Metas completadas/canceladas -->
+    @if(goalsCompletadas.length > 0) {
+      <p class="section-title">Historial</p>
+
+      @for(goal of goalsCompletadas; track goal.id) {
+        <div class="goal-card completed" [class.cancelled]="goal.state === 'cancelled'">
+          <div class="goal-header">
+            <div class="goal-icon-wrapper" [class.completed]="goal.state === 'completed'" [class.cancelled]="goal.state === 'cancelled'">
+              <ion-icon
+                [name]="goal.state === 'completed' ? 'checkmark-circle-outline' : 'close-circle-outline'"
+                class="goal-icon">
+              </ion-icon>
+            </div>
+            <div class="goal-info">
+              <h3 class="goal-name">{{ goal.name }}</h3>
+              <span class="goal-badge" [class.completed]="goal.state === 'completed'" [class.cancelled]="goal.state === 'cancelled'">
+                {{ goal.state_display }}
+              </span>
+            </div>
+            <span class="goal-target-small">$ {{ goal.target_amount | number:'1.0-0':'es-CL' }}</span>
+          </div>
+        </div>
+      }
+    }
+
+    <!-- Empty state -->
+    @if(!loading && goals.length === 0) {
+      <div class="empty-state">
+        <ion-icon name="trophy-outline" class="empty-icon"></ion-icon>
+        <p>No tienes metas de ahorro</p>
+        <p class="empty-hint">Toca el botón + para crear tu primera meta</p>
+      </div>
+    }
+
+  </div>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button class="savings-fab" (click)="crearMeta()">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>
