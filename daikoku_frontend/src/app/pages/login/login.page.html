@@ -32,13 +32,19 @@
       class="custom-input">
     </ion-input>
 
+    @if(error) {
+      <ion-text color="danger">
+        <p class="login-error">{{ error }}</p>
+      </ion-text>
+    }   
+
     <div class="options">
       <label>
         <input type="checkbox">
         Recuérdame
       </label>
 
-      <a>¿Olvidaste tu contraseña?</a>
+      <a routerLink="/forgot-password">¿Olvidaste tu contraseña?</a>
     </div>
 
     <ion-button expand="block" class="login-button" [disabled]="loading" (click)="login()">

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { Observable, forkJoin, of } from 'rxjs';
+import { delay } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +30,7 @@ logout() {
   localStorage.removeItem('access_token');
   localStorage.removeItem('refresh_token');
   localStorage.removeItem('user');
+  localStorage.clear();
 }
 
   getToken(): string | null {
@@ -74,7 +76,7 @@ logout() {
     );
 }
 
-saveIngresos(ingresos: { nombre: string; monto: number }[]): Observable<any> {
+  saveIngresos(ingresos: { nombre: string; monto: number; categoria: number }[]): Observable<any> {
   if (ingresos.length === 0) return of(null);
 
   const requests = ingresos.map(ingreso =>
@@ -82,13 +84,50 @@ saveIngresos(ingresos: { nombre: string; monto: number }[]): Observable<any> {
       type: 'income',
       amount: ingreso.monto,
       description: ingreso.nombre,
+      category: ingreso.categoria
     })
   );
 
   return forkJoin(requests);
 }
 
+  getUserFromBackend() {
+    return this.http.get<any>(`${this.apiUrl}/auth/profile/`);
   }
 
+  getCategories() {
+  return this.http.get<any[]>(`${this.apiUrl}/categories/`);
+}
+
+  createCategory(category_name: string, category_icon: string) {
+    return this.http.post(`${this.apiUrl}/categories/`, {
+      category_name,
+      category_icon
+    });
+}
+
+  forgotPassword(email: string) {
+  console.log('Recuperar contraseña para:', email);
+
+  return of(true).pipe(delay(1000));
+}
+
+  updateProfile(username: string, email: string) {
+    return this.http.patch(`${this.apiUrl}/auth/profile/`, {
+      username,
+      email
+    });
+}
+
+  changePassword(oldPassword: string, newPassword: string) {
+    return this.http.post(`${this.apiUrl}/auth/change-password/`, {
+      old_password: oldPassword,
+      new_password: newPassword
+    });
+  }
+
+    }
+
+  
 
 

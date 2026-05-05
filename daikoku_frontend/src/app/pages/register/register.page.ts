@@ -52,19 +52,10 @@ register() {
   this.loading = true;
 
   this.authService.register(this.username, this.email, this.password, this.password2).subscribe({
-    next: () => {
-      // Login automático después del registro
-      this.authService.login(this.email, this.password).subscribe({
         next: () => {
           this.loading = false;
-          this.router.navigate(['/onboarding']);
-        },
-        error: () => {
-          this.loading = false;
           this.router.navigate(['/login']);
-        }
-      });
-    },
+        },
     error: (err) => {
       this.loading = false;
       const e = err.error;

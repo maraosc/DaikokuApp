@@ -65,3 +65,18 @@ ion-item {
 ion-label {
   font-size: 14px;
 }
+
+.primary-button {
+  margin-top: 24px;
+  height: 52px;
+
+  --background: #3F4531;
+  --background-activated: #2f3425;
+  --color: #76F7BF;
+
+  --border-radius: 16px;
+  --box-shadow: 0 10px 24px rgba(0,0,0,0.2);
+
+  font-weight: 800;
+  text-transform: none;
+} 

@@ -22,7 +22,8 @@ ion-back-button {
 
 .savings-wrapper {
   position: relative;
-  padding: 16px 18px 100px;
+  min-height: 100%;
+  padding: 16px 18px;
 }
 
 .savings-wrapper::before {

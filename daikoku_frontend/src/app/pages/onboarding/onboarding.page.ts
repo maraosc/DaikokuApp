@@ -4,7 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { CurrencyPipe } from '@angular/common';
 import {
   IonContent, IonInput, IonButton, IonItem,
-  IonLabel, IonText, IonSpinner, IonIcon
+  IonLabel, IonText, IonSpinner, IonIcon, IonSelect,
+IonSelectOption
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { addOutline, trashOutline } from 'ionicons/icons';
@@ -15,6 +16,8 @@ import { CommonModule } from '@angular/common';
 interface Ingreso {
   nombre: string;
   monto: number;
+  categoria: number;
+  categoriaNombre?: string;
 }
 
 @Component({
@@ -25,7 +28,7 @@ interface Ingreso {
     FormsModule,
     CurrencyPipe,
     IonContent, IonInput, IonButton, IonItem,
-    IonLabel, IonText, IonSpinner, IonIcon, CommonModule
+    IonLabel, IonText, IonSpinner, IonIcon, CommonModule, IonSelect, IonSelectOption
   ],
 })
 export class OnboardingPage implements OnInit {
@@ -36,6 +39,9 @@ export class OnboardingPage implements OnInit {
   ingresos: Ingreso[]            = [];
   nuevoIngresoNombre             = '';
   nuevoIngresoMonto: number | null = null;
+  categorias: any[] = [];
+  nuevoIngresoCategoria: number | null = null;
+  nuevaCategoriaNombre = '';
 
   // Paso 1 — presupuesto
   monthlyBudget: number | null = null;
@@ -66,6 +72,7 @@ export class OnboardingPage implements OnInit {
     this.goalDeadline       = '';
     this.error              = '';
     this.loading            = false;
+    this.cargarCategorias();
   }
 
   // ── Paso 0: Ingresos ──────────────────────────────────────────────
@@ -77,6 +84,7 @@ export class OnboardingPage implements OnInit {
   agregarIngreso() {
     const nombre = this.nuevoIngresoNombre.trim();
     const monto  = this.nuevoIngresoMonto;
+    const categoriaNombre = this.nuevaCategoriaNombre.trim();
 
     if (!nombre) {
       this.error = 'Ingresa un nombre para la fuente de ingreso.';
@@ -87,15 +95,50 @@ export class OnboardingPage implements OnInit {
       return;
     }
 
-    this.ingresos.push({ nombre, monto });
-    this.nuevoIngresoNombre = '';
-    this.nuevoIngresoMonto  = null;
-    this.error              = '';
-  }
+    if (!categoriaNombre) {
+    this.error = 'Ingresa una categoría para el ingreso.';
+    return;
+    }
+
+    this.loading = true;
+
+  this.authService.createCategory(categoriaNombre, 'cash-outline').subscribe({
+    next: (cat: any) => {
+      this.ingresos.push({
+        nombre,
+        monto,
+        categoria: cat.id,
+        categoriaNombre: cat.category_name
+      });
+
+      this.nuevoIngresoNombre = '';
+      this.nuevoIngresoMonto = null;
+      this.nuevaCategoriaNombre = '';
+      this.error = '';
+      this.loading = false;
+    },
+    error: () => {
+      this.loading = false;
+      this.error = 'No se pudo crear la categoría.';
+    }
+  });
+}
 
   eliminarIngreso(index: number) {
     this.ingresos.splice(index, 1);
   }
+
+   cargarCategorias() {
+    this.authService.getCategories().subscribe({
+      next: (data: any[]) => {
+        this.categorias = data;
+      },
+      error: () => {
+        this.error = 'No se pudieron cargar las categorías.';
+      }
+    });
+  }
+
 
   // Con al menos un ingreso cargado → guardar y continuar
   continuarIngresos() {
@@ -158,9 +201,20 @@ export class OnboardingPage implements OnInit {
 
   // Sin presupuesto → saltar al paso 2
   omitirPresupuesto() {
-    this.step  = 2;
-    this.error = '';
-  }
+  this.error = '';
+  this.loading = true;
+
+  this.authService.completeOnboarding(0).subscribe({
+    next: () => {
+      this.loading = false;
+      this.step = 2;
+    },
+    error: () => {
+      this.loading = false;
+      this.error = 'Error al completar el registro.';
+    }
+  });
+}
 
   // ── Paso 2: Meta ──────────────────────────────────────────────────
 
@@ -180,13 +234,17 @@ export class OnboardingPage implements OnInit {
       this.goalDeadline || undefined
     ).subscribe({
       next: () => {
-        this.loading = false;
-        this.router.navigate(['/home']);
-      },
-      error: () => {
-        this.loading = false;
-        this.error   = 'Error al crear la meta.';
-      }
+      this.authService.completeOnboarding(this.monthlyBudget || 0).subscribe({
+        next: () => {
+          this.loading = false;
+          this.router.navigate(['/home']);
+        },
+        error: () => {
+          this.loading = false;
+          this.error = 'Error al completar el registro.';
+        }
+  });
+},
     });
   }
 

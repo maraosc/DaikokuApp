@@ -29,24 +29,35 @@ export class LoginPage {
     private router: Router
   ) {}
 
-  login() {
-    this.error   = '';
-    this.loading = true;
+ login() {
+  localStorage.clear();
 
-    this.authService.login(this.email, this.password).subscribe({
-      next: () => {
-        this.loading = false;
-        if (this.authService.isFullyRegistered()) {
-          this.router.navigate(['/home']);
-        } else {
+  this.error = '';
+  this.loading = true;
+
+  this.authService.login(this.email, this.password).subscribe({
+    next: () => {
+      this.authService.getUserFromBackend().subscribe({
+        next: (user: any) => {
+          localStorage.setItem('user', JSON.stringify(user));
+
+          this.loading = false;
+
+          if (user.full_register) {
+            this.router.navigate(['/home']);
+          } else {
+            this.router.navigate(['/onboarding']);
+          }
+        },
+        error: () => {
+          this.loading = false;
           this.router.navigate(['/onboarding']);
         }
-      },
-      error: (err) => {
-      this.loading = false;
+      });
+    },
 
-      console.log('EMAIL ERROR:', err.error?.email);
-      console.log('PASSWORD ERROR:', err.error?.password);  
+    error: (err) => {
+      this.loading = false;
 
       this.error =
         err.error?.detail ||
@@ -55,6 +66,13 @@ export class LoginPage {
         err.error?.non_field_errors?.[0] ||
         'Email o contraseña incorrectos.';
     }
-    });
-  }
+  });
+}
+
+    ionViewWillEnter() {
+      this.email = '';
+      this.password = '';
+      this.error = '';
+      this.loading = false;
+}
 }

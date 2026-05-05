@@ -1,0 +1,150 @@
+.profile-content {
+  --background: linear-gradient(
+    180deg,
+    #5FDD9D 0%,
+    #84EEA3 45%,
+    #AAFFA9 100%
+  );
+}
+
+ion-toolbar {
+  --background: transparent;
+  --color: white;
+}
+
+.profile-wrapper {
+  position: relative;
+  min-height: 100%;
+  padding: 28px 18px 100px;
+}
+
+.profile-wrapper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("/assets/img/fujimi.png");
+  background-size: 800px;
+  background-repeat: repeat;
+  background-position: center;
+  opacity: 0.06;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.profile-card,
+.logout-button {
+  position: relative;
+  z-index: 1;
+}
+
+.profile-card {
+  background: rgba(255,255,255,0.95);
+  border-radius: 22px;
+  padding: 22px 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+}
+
+.main-profile-card {
+  text-align: center;
+}
+
+.avatar-circle {
+  width: 86px;
+  height: 86px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  background: #3F4531;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-circle ion-icon {
+  font-size: 42px;
+  color: #76F7BF;
+}
+
+.main-profile-card h1 {
+  margin: 0 0 6px;
+  font-size: 26px;
+  font-weight: 900;
+  color: #3F4531;
+}
+
+.main-profile-card p {
+  margin: 0;
+  font-size: 14px;
+  color: #777;
+}
+
+.section-title {
+  margin: 0 0 14px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #499167;
+}
+
+.profile-row {
+  padding: 12px 0;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.profile-row:last-child {
+  border-bottom: none;
+}
+
+.row-label {
+  margin: 0 0 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #999;
+}
+
+.row-value {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+  color: #3F4531;
+}
+
+.profile-button {
+  height: 50px;
+  margin-top: 8px;
+
+  --background: #3F4531;
+  --color: #76F7BF;
+  --border-radius: 14px;
+  --box-shadow: 0 8px 18px rgba(0,0,0,0.16);
+
+  text-transform: none;
+  font-weight: 800;
+}
+
+.outline-button {
+  height: 50px;
+  margin-top: 12px;
+
+  --border-color: #3F4531;
+  --color: #3F4531;
+  --border-radius: 14px;
+
+  text-transform: none;
+  font-weight: 800;
+}
+
+.logout-button {
+  height: 52px;
+  margin-top: 20px;
+
+  --background: rgba(63,69,49,0.92);
+  --color: #91F9E5;
+  --border-radius: 16px;
+  --box-shadow: 0 10px 24px rgba(0,0,0,0.2);
+
+  text-transform: none;
+  font-weight: 900;
+}

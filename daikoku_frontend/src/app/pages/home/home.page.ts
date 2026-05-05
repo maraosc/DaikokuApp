@@ -82,6 +82,11 @@ export class HomePage implements OnInit, AfterViewInit {
     this.cargarIndicadores();
   }
 
+  ionViewWillEnter() {
+  this.cargarDatos();
+  this.cargarIndicadores();
+  }
+
   ngAfterViewInit() {
     const el = this.carouselRef?.nativeElement;
     if (el) {
@@ -137,6 +142,16 @@ export class HomePage implements OnInit, AfterViewInit {
       next: data => {
         this.goals        = data;
         this.totalAhorros = data.reduce((s, g) => s + Number(g.current_amount), 0);
+      }
+    });
+
+    this.http.get<Transaction[]>(`${this.apiUrl}/transactions/?month=${month}`).subscribe({
+    next: data => {
+    console.log('TRANSACCIONES HOME:', data);
+
+    this.transactions = data.sort((a, b) =>
+      new Date(b.date).getTime() - new Date(a.date).getTime()
+        );
       }
     });
   }

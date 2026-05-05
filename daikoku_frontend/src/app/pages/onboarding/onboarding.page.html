@@ -12,6 +12,7 @@
         <ion-item class="list-item">
           <ion-label>
             <h3>{{ ingreso.nombre }}</h3>
+            <p>{{ ingreso.categoriaNombre }}</p>
             <p>$ {{ ingreso.monto | number:'1.0-0':'es-CL' }}</p>
           </ion-label>
 
@@ -53,6 +54,16 @@
             placeholder="0">
           </ion-input>
         </ion-item>
+
+      <ion-item class="custom-item">
+          <ion-label position="stacked">Categoría del ingreso</ion-label>
+          <ion-input
+            type="text"
+            [(ngModel)]="nuevaCategoriaNombre"
+            (ionInput)="error = ''"
+            placeholder="Ej: Sueldo, bono, etc">
+          </ion-input>
+      </ion-item>
 
         <ion-button expand="block" fill="outline" class="outline-button" (click)="agregarIngreso()">
           Añadir ingreso

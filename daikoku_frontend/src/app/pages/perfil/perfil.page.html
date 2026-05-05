@@ -1,0 +1,72 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Perfil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="profile-content">
+
+  <div class="profile-wrapper">
+
+    <section class="profile-card main-profile-card">
+      <div class="avatar-circle">
+        <ion-icon name="person-outline"></ion-icon>
+      </div>
+
+      <h1>{{ user?.username || 'Usuario' }}</h1>
+      <p>{{ user?.email || 'correo@email.com' }}</p>
+    </section>
+
+    <section class="profile-card">
+      <p class="section-title">Información de cuenta</p>
+
+      <div class="profile-row">
+        <div>
+          <p class="row-label">Usuario</p>
+          <p class="row-value">{{ user?.username }}</p>
+        </div>
+      </div>
+
+      <div class="profile-row">
+        <div>
+          <p class="row-label">Correo</p>
+          <p class="row-value">{{ user?.email }}</p>
+        </div>
+      </div>
+
+      <div class="profile-row">
+        <div>
+          <p class="row-label">Registro completo</p>
+          <p class="row-value">
+            {{ user?.full_register ? 'Sí' : 'No' }}
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="profile-card">
+      <p class="section-title">Preferencias</p>
+
+      <ion-button expand="block" class="profile-button" (click)="irEditarPerfil()">
+      Editar perfil
+    </ion-button>
+
+      <ion-button
+      expand="block"
+      fill="outline"
+      class="outline-button"
+      (click)="irCambiarPassword()">
+      Cambiar contraseña
+    </ion-button>
+    </section>
+
+    <ion-button expand="block" class="logout-button" (click)="logout()">
+      Cerrar sesión
+    </ion-button>
+
+  </div>
+
+</ion-content>

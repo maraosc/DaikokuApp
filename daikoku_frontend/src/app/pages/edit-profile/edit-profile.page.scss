@@ -1,0 +1,95 @@
+.edit-profile-content {
+  --background: linear-gradient(
+    180deg,
+    #5FDD9D 0%,
+    #84EEA3 45%,
+    #AAFFA9 100%
+  );
+}
+
+ion-toolbar {
+  --background: transparent;
+  --color: white;
+}
+
+.edit-profile-wrapper {
+  position: relative;
+  min-height: 100%;
+  padding: 40px 18px 100px;
+}
+
+.edit-profile-wrapper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("/assets/img/fujimi.png");
+  background-size: 800px;
+  background-repeat: repeat;
+  background-position: center;
+  opacity: 0.06;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.edit-profile-card {
+  position: relative;
+  z-index: 1;
+
+  background: rgba(255,255,255,0.95);
+  border-radius: 22px;
+  padding: 26px 20px;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+}
+
+.edit-profile-card h1 {
+  margin: 0 0 6px;
+  font-size: 26px;
+  font-weight: 900;
+  color: #3F4531;
+}
+
+.edit-profile-card > p {
+  margin: 0 0 24px;
+  color: #777;
+  font-size: 14px;
+}
+
+.custom-item {
+  --background: #f8f9f7;
+  --border-color: transparent;
+  --highlight-height: 0;
+  --padding-start: 14px;
+  --inner-padding-end: 14px;
+
+  margin-bottom: 14px;
+  border-radius: 14px;
+  border: 1px solid #eeeeee;
+}
+
+.custom-item ion-label {
+  color: #499167;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.save-button {
+  height: 52px;
+  margin-top: 22px;
+
+  --background: #3F4531;
+  --background-activated: #2f3425;
+  --color: #76F7BF;
+
+  --border-radius: 16px;
+  --box-shadow: 0 10px 24px rgba(0,0,0,0.2);
+
+  text-transform: none;
+  font-weight: 900;
+}
+
+.message {
+  margin: 8px 0 0;
+  text-align: center;
+  font-weight: 700;
+  font-size: 13px;
+}
