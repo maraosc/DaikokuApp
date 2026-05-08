@@ -1,0 +1,139 @@
+<ion-content class="edit-content">
+  <div class="edit-wrapper">
+
+    <div class="handle"></div>
+
+    @if(vista === 'editar') {
+
+      <!-- Header -->
+      <div class="edit-header">
+        <div class="edit-header-left">
+          <div class="edit-avatar">
+            <ion-icon [name]="budget?.category_icon || 'cash-outline'"></ion-icon>
+          </div>
+          <div>
+            <p class="edit-header-label">Presupuesto</p>
+            <h3 class="edit-header-name">{{ budget?.category_name }}</h3>
+          </div>
+        </div>
+        <button class="close-btn" (click)="cancelar()">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <!-- Progreso actual -->
+      <div class="progress-card">
+        <div class="progress-row">
+          <div class="progress-block">
+            <p class="progress-label">Gastado</p>
+            <p class="progress-value expense">$ {{ budget?.spent_amount | number:'1.0-0':'es-CL' }}</p>
+          </div>
+          <div class="progress-divider"></div>
+          <div class="progress-block">
+            <p class="progress-label">Presupuesto</p>
+            <p class="progress-value">$ {{ budget?.amount | number:'1.0-0':'es-CL' }}</p>
+          </div>
+          <div class="progress-divider"></div>
+          <div class="progress-block">
+            <p class="progress-label">Disponible</p>
+            <p class="progress-value available">$ {{ budget?.remaining_amount | number:'1.0-0':'es-CL' }}</p>
+          </div>
+        </div>
+        <div class="progress-bar-wrapper">
+          <div
+            class="progress-bar-fill"
+            [style.width.%]="budget?.progress_percentage"
+            [class.danger]="budget?.progress_percentage >= 100"
+            [class.warning]="budget?.progress_percentage >= 80 && budget?.progress_percentage < 100">
+          </div>
+        </div>
+        <p class="progress-pct">{{ budget?.progress_percentage | number:'1.0-0' }}% utilizado</p>
+      </div>
+
+      <!-- Input monto -->
+      <div class="amount-card">
+        <p class="amount-card-label">Nuevo monto</p>
+        <div class="amount-input-row">
+          <span class="amount-currency">$</span>
+          <input
+            type="text"
+            inputmode="numeric"
+            [value]="montoDisplay"
+            (input)="onMontoChange($any($event.target).value)"
+            placeholder="0"
+            class="amount-input">
+        </div>
+        @if(error) {
+          <p class="amount-error">{{ error }}</p>
+        }
+      </div>
+
+      <button class="confirm-btn" [disabled]="saving" (click)="guardar()">
+        @if(saving) {
+          <ion-spinner name="crescent" style="width:20px;height:20px;"></ion-spinner>
+        } @else {
+          <ion-icon name="checkmark-outline"></ion-icon>
+          Guardar cambios
+        }
+      </button>
+
+      <button class="delete-btn" (click)="eliminar()">
+        <ion-icon name="trash-outline"></ion-icon>
+        Eliminar presupuesto
+      </button>
+
+    }
+
+    @if(vista === 'confirmar') {
+
+      <!-- Header confirmar -->
+      <div class="edit-header">
+        <button class="close-btn" (click)="vista = 'editar'">
+          <ion-icon name="arrow-back-outline"></ion-icon>
+        </button>
+        <div style="flex:1"></div>
+        <button class="close-btn" (click)="cancelar()">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="confirm-wrapper">
+        <div class="confirm-icon-wrapper">
+          <ion-icon name="trash-outline" class="confirm-icon"></ion-icon>
+        </div>
+        <h2 class="confirm-title">¿Eliminar presupuesto?</h2>
+        <p class="confirm-msg">
+          Estás a punto de eliminar el presupuesto de
+          <strong>{{ budget?.category_name }}</strong>.
+          Esta acción no se puede deshacer.
+        </p>
+
+        <div class="confirm-info-card">
+          <div class="confirm-info-row">
+            <span class="confirm-info-label">Presupuesto</span>
+            <span class="confirm-info-value">$ {{ budget?.amount | number:'1.0-0':'es-CL' }}</span>
+          </div>
+          <div class="confirm-info-row">
+            <span class="confirm-info-label">Gastado</span>
+            <span class="confirm-info-value expense">$ {{ budget?.spent_amount | number:'1.0-0':'es-CL' }}</span>
+          </div>
+          <div class="confirm-info-row">
+            <span class="confirm-info-label">Utilizado</span>
+            <span class="confirm-info-value">{{ budget?.progress_percentage | number:'1.0-0' }}%</span>
+          </div>
+        </div>
+
+        <button class="danger-btn" (click)="confirmarEliminar()">
+          <ion-icon name="trash-outline"></ion-icon>
+          Sí, eliminar
+        </button>
+
+        <button class="cancel-soft-btn" (click)="vista = 'editar'">
+          Cancelar
+        </button>
+      </div>
+
+    }
+
+  </div>
+</ion-content>

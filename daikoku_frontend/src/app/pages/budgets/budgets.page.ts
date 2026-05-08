@@ -5,7 +5,7 @@ import {
   IonContent, IonHeader, IonTitle, IonToolbar, IonButtons,
   IonBackButton, IonButton, IonIcon, IonItem, IonLabel,
   IonList, IonProgressBar, IonNote, IonFab, IonFabButton,
-  AlertController, ModalController
+  ModalController
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -21,6 +21,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { CategoryPickerComponent } from '../../components/category-picker/category-picker.component';
 import { AmountPickerComponent } from '../../components/amount-picker/amount-picker.component';
+import { BudgetEditComponent } from '../../components/budget-edit/budget-edit.component';
 
 interface Budget {
   id: number;
@@ -66,7 +67,6 @@ export class BudgetsPage implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private alertCtrl: AlertController,
     private modalCtrl: ModalController,
   ) {
     addIcons({
@@ -137,26 +137,26 @@ export class BudgetsPage implements OnInit {
     }
   }
 
-async pedirMonto(categoryId: number) {
-  const cat = this.categories.find(c => c.id === categoryId);
+  async pedirMonto(categoryId: number) {
+    const cat = this.categories.find(c => c.id === categoryId);
 
-  const modal = await this.modalCtrl.create({
-    component: AmountPickerComponent,
-    componentProps: {
-      categoryName: cat?.category_name ?? '',
-      categoryIcon: cat?.category_icon ?? 'cash-outline',
-    },
-    breakpoints: [0, 0.6],
-    initialBreakpoint: 0.6,
-  });
+    const modal = await this.modalCtrl.create({
+      component: AmountPickerComponent,
+      componentProps: {
+        categoryName: cat?.category_name ?? '',
+        categoryIcon: cat?.category_icon ?? 'cash-outline',
+      },
+      breakpoints: [0, 0.6],
+      initialBreakpoint: 0.6,
+    });
 
-  await modal.present();
+    await modal.present();
 
-  const { data, role } = await modal.onWillDismiss();
-  if (role === 'confirm' && data?.amount) {
-    this.guardarPresupuesto(categoryId, data.amount);
+    const { data, role } = await modal.onWillDismiss();
+    if (role === 'confirm' && data?.amount) {
+      this.guardarPresupuesto(categoryId, data.amount);
+    }
   }
-}
 
   guardarPresupuesto(categoryId: number, amount: number) {
     this.http.post(`${this.apiUrl}/budgets/`, {
@@ -170,52 +170,29 @@ async pedirMonto(categoryId: number) {
   }
 
   async editarPresupuesto(budget: Budget) {
-    const alert = await this.alertCtrl.create({
-      header: `Editar — ${budget.category_name}`,
-      inputs: [
-        {
-          name: 'amount',
-          type: 'number',
-          value: budget.amount,
-        }
-      ],
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        {
-          text: 'Guardar',
-          handler: (data) => {
-            const amount = parseFloat(data.amount);
-            if (!amount || amount <= 0) return false;
-            this.http.patch(`${this.apiUrl}/budgets/${budget.id}/`, { amount }).subscribe({
-              next: () => this.cargarDatos(),
-              error: () => {}
-            });
-            return true;
-          }
-        }
-      ]
+    const modal = await this.modalCtrl.create({
+      component: BudgetEditComponent,
+      componentProps: { budget },
+      breakpoints: [0, 0.75],
+      initialBreakpoint: 0.75,
     });
-    await alert.present();
-  }
 
-  async eliminarPresupuesto(budget: Budget) {
-    const alert = await this.alertCtrl.create({
-      header: 'Eliminar presupuesto',
-      message: `¿Eliminar el presupuesto de ${budget.category_name}?`,
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        {
-          text: 'Eliminar',
-          role: 'destructive',
-          handler: () => {
-            this.http.delete(`${this.apiUrl}/budgets/${budget.id}/`).subscribe({
-              next: () => this.cargarDatos(),
-              error: () => {}
-            });
-          }
-        }
-      ]
-    });
-    await alert.present();
+    await modal.present();
+
+    const { data, role } = await modal.onWillDismiss();
+
+    if (role === 'confirm' && data?.amount) {
+      this.http.patch(`${this.apiUrl}/budgets/${budget.id}/`, {
+        amount: data.amount
+      }).subscribe({
+        next: () => this.cargarDatos(),
+        error: () => {}
+      });
+    } else if (role === 'delete') {
+      this.http.delete(`${this.apiUrl}/budgets/${budget.id}/`).subscribe({
+        next: () => this.cargarDatos(),
+        error: () => {}
+      });
+    }
   }
 }
