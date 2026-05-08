@@ -40,6 +40,21 @@ export class ChangePasswordPage {
 
   constructor(private authService: AuthService, private router: Router) {}
 
+  private traducirError(texto: string): string {
+    const t = texto.toLowerCase();
+    if (t.includes('too short') || t.includes('8 characters'))
+      return 'La contraseña debe tener al menos 8 caracteres.';
+    if (t.includes('too common'))
+      return 'La contraseña es demasiado común. Usa una más segura.';
+    if (t.includes('entirely numeric'))
+      return 'La contraseña no puede contener solo números.';
+    if (t.includes('too similar'))
+      return 'La contraseña es muy similar a tu nombre de usuario.';
+    if (t.includes('incorrect'))
+      return 'La contraseña actual es incorrecta.';
+    return texto;
+  }
+
   cambiar() {
     this.error = '';
     this.success = false;
@@ -71,10 +86,14 @@ export class ChangePasswordPage {
       error: (err) => {
         this.loading = false;
 
-        this.error =
+        const msg =
           err.error?.old_password?.[0] ||
           err.error?.new_password?.[0] ||
-          'No se pudo cambiar la contraseña.';
+          '';
+
+        this.error = msg
+          ? this.traducirError(msg)
+          : 'No se pudo cambiar la contraseña.';
       }
     });
   }

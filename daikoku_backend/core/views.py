@@ -61,17 +61,16 @@ class ProfileView(generics.RetrieveUpdateAPIView):
         return self.request.user
 
 
-class ChangePasswordView(generics.UpdateAPIView):
-    """PUT /api/auth/change-password/ — cambio de contraseña."""
+class ChangePasswordView(APIView):
+    """POST /api/auth/change-password/ — cambio de contraseña."""
 
-    serializer_class = ChangePasswordSerializer
     permission_classes = [IsAuthenticated]
 
-    def get_object(self):
-        return self.request.user
-
-    def update(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+    def post(self, request):
+        serializer = ChangePasswordSerializer(
+            data=request.data,
+            context={"request": request}
+        )
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response({"detail": "Contraseña actualizada correctamente."})
