@@ -136,13 +136,12 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1:8100',
     'capacitor://localhost',
     'https://daikokuapp-production.up.railway.app',
-    'https://daikoku-frontend-production.up.railway.app',
+    'https://daikokuapp-frontend-production.up.railway.app',
 ]
 
-# Permitir cookies en CORS para autenticación con JWT
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8100',
-    'http://127.0.0.1:8100', s
+    'http://127.0.0.1:8100',
     'https://daikokuapp-production.up.railway.app',
-    'https://daikoku-frontend-production.up.railway.app',
+    'https://daikokuapp-frontend-production.up.railway.app',
 ]
