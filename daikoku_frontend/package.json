@@ -4,14 +4,14 @@
   "author": "Ionic Framework",
   "homepage": "https://ionicframework.com/",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "lint": "ng lint",
-    "dev": "concurrently \"cd ../daikoku_backend && python manage.py runserver\" \"ionic serve\""
-  },
+  "ng": "ng",
+  "start": "serve -s www -l tcp://0.0.0.0:$PORT"
+  "build": "ng build",
+  "watch": "ng build --watch --configuration development",
+  "test": "ng test",
+  "lint": "ng lint",
+  "dev": "concurrently \"cd ../daikoku_backend && python manage.py runserver\" \"ionic serve\""
+},
   "private": true,
   "dependencies": {
     "@angular/animations": "^20.0.0",
@@ -31,6 +31,7 @@
     "chart.js": "^4.5.1",
     "ionicons": "^7.0.0",
     "rxjs": "~7.8.0",
+    "serve": "^14.2.6",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
   },
