@@ -28,6 +28,7 @@ urlpatterns = [
          name="category_list"),
     path("categories/<int:pk>/", views.CategoryDetailView.as_view(),
          name="category_detail"),
+    path("auth/google/", views.GoogleLoginView.as_view(), name="google_login"),
 
     # --- Transacciones y Metas (via router) ---
     path("", include(router.urls)),

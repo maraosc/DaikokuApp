@@ -1,0 +1,32 @@
+[33mb29ddfa[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m feat: google login con variables de entorno
+[33m3647d62[m login con google
+[33mdf90f25[m login con google
+[33m1301edc[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Solucion modo oscuro en descripcion de transacciones
+[33m3af9494[m traduccion mensajes cambiar contraseña
+[33m95a06d5[m Arreglo editar presupuestos
+[33mb103580[m Perfil, log out, arreglos categoría y home, editar perfil, cambiar contraseña y olvidaste contraseña
+[33ma84448d[m Creacion pagina estadisticas
+[33mbec6859[m Mejora diseño home
+[33mbf3cf75[m Mejora diseño home
+[33m46d3aee[m Diseño agregar nueva meta de ahorro
+[33mb389522[m mejora diseño  edicion de meta de ahorro
+[33m50cfa19[m Componente edicion de meta de ahorro
+[33me974010[m Creación seccion ahorro
+[33m872472a[m Diseño ingresar monto presupuesto
+[33m2d382ce[m Diseño presupuestos
+[33mfedd37c[m Diseño seleccionar transaccion
+[33m552764c[m diseño agregar transaccion
+[33m5f5b876[m diseño menú lateral
+[33m05a88c8[m Agregar gitignore
+[33me35497a[m Resolve merge conflicts
+[33m8c87d34[m Front, npm run dev para correr front y back y cambios en algunas page.ts
+[33m8fcdccd[m Crear categorias desde prespuestos
+[33me4d9e59[m Agregar presupuestos
+[33m3f8d0ce[m Consumo API
+[33m12f5b4c[m Editar transacciones
+[33m042dfa4[m Registro de gastos e ingresos  en home y register
+[33mee0f64c[m Adicion de onboarding
+[33m47d30d5[m Registro funcional
+[33m32e266f[m Funcionalidad login, autenticacion y seguridad
+[33m738c2d9[m Creacion protecto base
+[33m99a09d7[m Initial commit

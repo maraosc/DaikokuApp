@@ -2,6 +2,11 @@ from .models import Category, Goal, Transaction, User, Budget
 from django.shortcuts import render
 from django.db.models import Sum, Q
 from django.utils import timezone
+from google.oauth2 import id_token
+from google.auth.transport import requests as google_requests
+from rest_framework_simplejwt.tokens import RefreshToken
+import os
+
 
 from rest_framework import generics, status, viewsets
 from rest_framework.decorators import action
@@ -273,3 +278,42 @@ class BudgetViewSet(viewsets.ModelViewSet):
         if month:
             qs = qs.filter(month=month)
         return qs
+
+
+class GoogleLoginView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        token = request.data.get('credential')
+        if not token:
+            return Response({'error': 'Token requerido.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID')
+            info = id_token.verify_oauth2_token(
+                token, google_requests.Request(), CLIENT_ID
+            )
+
+            email = info['email']
+            username = email.split('@')[0]
+
+            user, _ = User.objects.get_or_create(
+                email=email,
+                defaults={'username': username}
+            )
+
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'access':  str(refresh.access_token),
+                'refresh': str(refresh),
+                'user': {
+                    'id':             user.id,
+                    'username':       user.username,
+                    'email':          user.email,
+                    'full_register':  user.full_register,
+                    'monthly_budget': str(user.monthly_budget) if user.monthly_budget else None,
+                }
+            })
+
+        except ValueError:
+            return Response({'error': 'Token inválido.'}, status=status.HTTP_401_UNAUTHORIZED)

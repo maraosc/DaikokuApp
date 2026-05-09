@@ -49,25 +49,12 @@
   z-index: 2;
 }
 
-.google-button {
-  height: 48px;
-  margin-bottom: 24px;
+// ── Botón Google ──────────────────────────────────────────────────────
 
-  --background: white;
-  --color: #333;
-  --border-color: #eeeeee;
-  --border-radius: 8px;
-  --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-
-  text-transform: none;
-  font-weight: 700;
-}
-
-.google-g {
-  color: #2bae66;
-  font-size: 20px;
-  font-weight: 900;
-  margin-right: 12px;
+.google-btn-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
 }
 
 .divider {

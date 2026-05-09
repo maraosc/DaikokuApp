@@ -126,6 +126,16 @@ logout() {
     });
   }
 
+  googleLogin(credential: string): Observable<any> {
+  return this.http.post<any>(`${this.apiUrl}/auth/google/`, { credential }).pipe(
+    tap((res: any) => {
+      localStorage.setItem('access_token', res.access);
+      localStorage.setItem('refresh_token', res.refresh);
+      localStorage.setItem('user', JSON.stringify(res.user));
+    })
+  );
+}
+
     }
 
   
