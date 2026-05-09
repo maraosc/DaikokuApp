@@ -7,9 +7,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-9hiz+^bt)a+p%fb)a&0_1i%mv4rkkdr0zdwfq=z)fhzc=aj&nj'
 
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv(
+    'ALLOWED_HOSTS',
+    'localhost,127.0.0.1,daikokuapp-production.up.railway.app'
+).split(',')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
