@@ -338,3 +338,20 @@
   border-radius: 12px;
   margin-top: 8px;
 }
+
+// ── Fix modo oscuro ───────────────────────────────────────────────────
+
+.field-item {
+  --background: transparent;
+  --border-color: transparent;
+  --padding-start: 0;
+  --inner-padding-end: 0;
+
+  // Fuerza el color del texto siempre oscuro, independiente del tema
+  --color: #3F4531;
+
+  ion-input {
+    --color: #3F4531;
+    --placeholder-color: #aaa;
+  }
+}
